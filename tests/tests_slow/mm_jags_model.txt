@@ -1,0 +1,74 @@
+model { 
+
+  X.SE1 ~ dbin(pi[1], n)                                             # Number of side effects in standard care
+  X.SE2 ~ dbin(pi[2], n)                                             # Number of side effects in novel treatment
+  X.N.hosp ~ dbinom(gamma.hosp, X.SE1 + X.SE2)                       # Total number of patients in hospital care
+  X.N.dead ~ dbin(gamma.dead, X.N.hosp)                              # Total number of patients dead
+  
+  # Daily rate of recovery for home care and hospital care
+  recover.home <- -log(1 - lambda.home.rec.TH)
+  recover.hosp <- -log(1 - lambda.hosp.rec.TH)
+  
+  # Recovery time at home
+  for(i in 1:N.home){
+    T.rec.home[i] ~ dexp(recover.home)
+  }
+  
+  # Recovery time at hospital
+  for(i in 1:N.hosp){
+    T.rec.hosp[i] ~ dexp(recover.hosp)
+  }
+  
+  # Number of side effects
+  num.se ~ dbin(pi[1], num.pat)  
+  # Probability of side effects given Soc
+  pi[1] ~ dbeta(1, 1)               
+  #
+  rho ~ dnorm(m.rho, tau.rho)    
+  # Probability of side effects given new treatment
+  pi[2] <- rho*pi[1]     
+  
+  # Expected number of patients with side effects given Soc and new treatment 
+  for (t in 1:2) {
+    SE[t] ~ dbin(pi[t], N)
+  }
+  
+  # Number of hopistalized individual (Sampling distribution)
+  num.hosp ~ dbin(gamma.hosp, num.se)                                # Patients experienced side effects who require hospital care
+  gamma.hosp ~ dbeta(1, 1)                                           # Probability that side effects with hospital care
+  
+  # Number of death
+  num.dead ~ dbin(gamma.dead, num.hosp)                              # Patients experienced side effects who dead eventually
+  gamma.dead ~ dbeta(1, 4)                                           # Probability that side effects result in death eventually  
+  
+  # Daily probability of recovery from both home care and hospital care
+  lambda.home.rec.TH ~ dbeta(p1.home.rec, p2.home.rec)
+  lambda.hosp.rec.TH ~ dbeta(p1.hosp.rec, p2.hosp.rec)
+  
+  # Transition probability from home care state
+  lambda.home.home <- 1 - lambda.home.rec - lambda.home.hosp         # Probability of staying in home care
+  lambda.home.rec <- (1 - lambda.home.hosp)*lambda.home.rec.TH       # Probability of recovering with home care
+  cum.haz.hosp <- -log(1 - gamma.hosp)                               # Cumulative hazard of hospitalization
+  daily.cum.haz.hosp <- cum.haz.hosp/TH                              # Daily cumulative hazard of hospitalization
+  lambda.home.hosp <- 1 - exp(-daily.cum.haz.hosp)                   # Daily probability of switching to hospital care
+  
+  # Transition probability from hospital care state
+  lambda.hosp.hosp <- 1 - lambda.hosp.rec - lambda.hosp.dead         # Probability of staying in hospital care
+  lambda.hosp.rec <- (1 - lambda.hosp.dead)*lambda.hosp.rec.TH       # Probability of recovering with hospital care
+  cum.haz.dead <- -log(1 - gamma.dead)                               # Cumulative hazard of hospitalization
+  daily.cum.haz.dead <- cum.haz.dead/TH                              # Daily cumulative hazard of hospitalization
+  lambda.hosp.dead <- 1 - exp(-daily.cum.haz.dead)                   # Daily probability of death
+  
+  # Costs
+  c.home ~ dlnorm(m.home, tau.home)                                  # Cost of home care 
+  c.hosp ~ dlnorm(m.hosp, tau.hosp)                                  # Cost of hospitalization
+  c.dead ~ dlnorm(m.dead, tau.dead)                                  # Cost of death
+  
+  # Effects
+  e.chemo ~ dbeta(p1.chemo,p2.chemo)                                 # The QoL weight with no adverse events
+  e.home ~ dbeta(p1.home,p2.home)                                    # Effect (QALY score) of home care
+  e.hosp ~ dbeta(p1.hosp,p2.hosp)                                    # Effect (QALY score) of hospital care 
+  
+  pi1 <- pi[1]                                                       # Probability of side effects given Soc (pi1)
+  pi2 <- pi[2]                                                       # Probability of side effects given new treatment (pi2)
+} 

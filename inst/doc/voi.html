@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Christopher Jackson" />
+
+<meta name="date" content="2023-05-26" />
+
+<title>voi for Value of Information calculation: package overview</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">voi for Value of Information calculation:
+package overview</h1>
+<h4 class="author">Christopher Jackson</h4>
+<h4 class="date">2023-05-26</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#simple-example-model" id="toc-simple-example-model">Simple
+example model</a>
+<ul>
+<li><a href="#specifying-model-inputs" id="toc-specifying-model-inputs">Specifying model inputs</a></li>
+<li><a href="#specifying-model-outputs" id="toc-specifying-model-outputs">Specifying model outputs</a></li>
+</ul></li>
+<li><a href="#evpi" id="toc-evpi">Expected value of perfect
+information</a></li>
+<li><a href="#evppi" id="toc-evppi">Expected value of partial perfect
+information</a>
+<ul>
+<li><a href="#invoking-the-evppi-function." id="toc-invoking-the-evppi-function.">Invoking the <code>evppi</code>
+function.</a></li>
+<li><a href="#changing-the-default-calculation-method" id="toc-changing-the-default-calculation-method">Changing the default
+calculation method</a></li>
+<li><a href="#evppimc" id="toc-evppimc">Traditional Monte Carlo nested
+loop method</a></li>
+</ul></li>
+<li><a href="#evsi" id="toc-evsi">Expected value of sample
+information</a>
+<ul>
+<li><a href="#function-to-generate-study-data" id="toc-function-to-generate-study-data">Function to generate study
+data</a></li>
+<li><a href="#evsibuiltin" id="toc-evsibuiltin">Built-in study
+designs</a></li>
+<li><a href="#importance-sampling-method" id="toc-importance-sampling-method">Importance sampling method</a></li>
+<li><a href="#moment-matching-method" id="toc-moment-matching-method">Moment matching method</a></li>
+</ul></li>
+<li><a href="#value-of-information-in-models-for-estimation" id="toc-value-of-information-in-models-for-estimation">Value of
+Information in models for estimation</a>
+<ul>
+<li><a href="#evpi-and-evppi-for-estimation" id="toc-evpi-and-evppi-for-estimation">EVPI and EVPPI for
+estimation</a></li>
+<li><a href="#how-regression-based-evppi-estimation-works" id="toc-how-regression-based-evppi-estimation-works">How
+regression-based EVPPI estimation works</a></li>
+<li><a href="#evsi-for-estimation" id="toc-evsi-for-estimation">EVSI for
+estimation</a></li>
+</ul></li>
+<li><a href="#enbs" id="toc-enbs">Expected net benefit of
+sampling</a></li>
+</ul>
+</div>
+
+<p>Value of Information methods are a decision-theoretic framework for
+estimating the expected value of getting more information of particular
+kinds.</p>
+<p>They are used in mathematical and statistical models, where
+parameters of the models represent quantities that are uncertain, and
+uncertainty is described by probability distributions.</p>
+<p>The following two papers give a thorough recent review of the theory
+of the methods, and details of how they are applied and interpreted,
+from the perspective of healthcare decision-making.</p>
+<p><a href="https://doi.org/10.1016/j.jval.2020.01.001">Value of
+Information Analysis for Research Decisions—An Introduction: Report 1 of
+the ISPOR Value of Information Analysis Emerging Good Practices Task
+Force</a></p>
+<p><a href="https://doi.org/10.1016/j.jval.2020.01.004">Value of
+information analytical methods: report 2 of the ISPOR value of
+information analysis emerging good practices task force</a></p>
+<p>This document gives a simple overview of how the <code>voi</code>
+package is used to calculate measures of Value of Information. A simple
+example model is used, but the same methods work in more complex
+models.</p>
+<p>The example model is a model used for <em>decision making</em>, which
+has been the most common application of VoI, e.g. in health economic
+evaluations.</p>
+<p>A later section describes the use of VoI methods for a model that is
+used for <em>estimation</em> of uncertain quantities, rather than for
+explicit decision-making. For more information about the theory behind
+this, see <a href="https://doi.org/10.1080/01621459.2018.1562932">Jackson et
+al. 2019</a> and <a href="https://doi.org/10.1515/em-2021-0012">Jackson
+et al. 2021</a>.</p>
+<div id="simple-example-model" class="section level2">
+<h2>Simple example model</h2>
+<p>Suppose we are making a decision between two treatments. Treatment 1
+has no costs or effects. Treatment 2 has a <em>net benefit</em> which
+describes its average costs and effects for a population. We choose
+Treatment 2 if its <em>incremental net benefit</em>, relative to
+treatment 1, is positive. The incremental net benefit in this simple
+case is identical to the net benefit of treatment 2, since the net
+benefit of treatment 1 is zero.</p>
+<p>Suppose that the net benefit is simply defined as the difference
+between two uncertain <em>parameters</em>, <span class="math inline">\(y(p_1,p_2) = p_1 - p_2\)</span>, where <span class="math inline">\(p_1\)</span> gives the effects, and <span class="math inline">\(p_2\)</span> gives the costs. Our current
+uncertainty can be described by normal distributions <span class="math inline">\(p_1 \sim N(1,1)\)</span> and <span class="math inline">\(p_2 \sim N(0,2)\)</span>.</p>
+<p>To make a decision under parameter uncertainty, one option is
+preferred to another if the <em>expectation</em> of its net benefit,
+with respect to the uncertainty, is greater. In this case, we choose
+treatment 2, because the net benefit is distributed as <span class="math inline">\(N(1, \sqrt{1^2+2^2}) = N(1, \sqrt{5})\)</span>
+which has an expectation of 1, whereas treatment 1 has a known net
+benefit of zero.</p>
+<p>Most of the functions in the <code>voi</code> package work with a
+<em>random sample</em> of model inputs and outputs, generated from
+“uncertainty analysis”, also known as “probabilistic sensitivity
+analysis” or “probabilistic analysis”. For the example model, these are
+simple to generate, as follows.</p>
+<div id="specifying-model-inputs" class="section level3">
+<h3>Specifying model inputs</h3>
+<p>The inputs should be a data frame with one column per parameter and
+one row per random sample.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>nsam <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>inputs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">p1 =</span> <span class="fu">rnorm</span>(nsam, <span class="dv">1</span>, <span class="dv">1</span>), </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">p2 =</span> <span class="fu">rnorm</span>(nsam, <span class="dv">0</span>, <span class="dv">2</span>))</span></code></pre></div>
+</div>
+<div id="specifying-model-outputs" class="section level3">
+<h3>Specifying model outputs</h3>
+<p>The outputs can be supplied in either of two forms.</p>
+<p><strong>Net benefit</strong> form. A data frame with one column per
+treatment, and one row per random sample, giving the net benefit of each
+treatment. In this example, the net benefit of treatment 1 is zero.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>outputs_nb <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">t1 =</span> <span class="dv">0</span>, </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">t2 =</span> inputs<span class="sc">$</span>p1 <span class="sc">-</span> inputs<span class="sc">$</span>p2)</span></code></pre></div>
+<p><strong>Cost-effectiveness analysis</strong> form. This should be a
+list that includes the following three named elements (in any order)</p>
+<ul>
+<li><p><code>&quot;c&quot;</code>: a data frame with one column per treatment and
+one row per random sample, containing sampled values for the expected
+costs of the treatment.</p></li>
+<li><p><code>&quot;e&quot;</code>: a data frame with one column per treatment and
+one row per random sample, containing sampled values for the expected
+effects of the treatment.</p></li>
+<li><p><code>&quot;k&quot;</code>: a vector of values giving alternative amounts
+that a decision-maker is willing to pay for one unit of effectiveness,
+so that the net (monetary) benefit is <span class="math inline">\(e
+\times k - c\)</span>.</p></li>
+</ul>
+<p>In this simple example, the parameter <span class="math inline">\(p_1\)</span> gives the effects, and <span class="math inline">\(p_2\)</span> the costs of treatment 2, and the net
+benefit <span class="math inline">\(y = p_1 - p_2\)</span> defined in
+<code>outputs_nb</code> corresponds to a willingness-to-pay of <span class="math inline">\(k=1\)</span>. The cost-effectiveness format allows
+us to compare VoI between different willingness-to-pay values, e.g. 1, 2
+and 3 say here.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>outputs_cea <span class="ot">&lt;-</span> <span class="fu">list</span>( </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">e =</span> <span class="fu">data.frame</span>(<span class="at">t1 =</span> <span class="dv">0</span>, <span class="at">t2 =</span> inputs<span class="sc">$</span>p1), </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">c =</span> <span class="fu">data.frame</span>(<span class="at">t1 =</span> <span class="dv">0</span>, <span class="at">t2 =</span> inputs<span class="sc">$</span>p2), </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">k =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Note that objects returned by the <code>bcea</code> function in the
+<a href="https://CRAN.R-project.org/package=BCEA">BCEA</a> package
+satisfy this “cost-effectiveness analysis” format.</p>
+</div>
+</div>
+<div id="evpi" class="section level2">
+<h2>Expected value of perfect information</h2>
+<p>The <em>expected value of perfect information</em> is the expected
+net benefit given perfect information minus the expected net benefit
+given current information.</p>
+<div id="computation-using-random-sampling" class="section level4">
+<h4>Computation using random sampling</h4>
+<ul>
+<li><p>Given current information, we decided on treatment 2. In the
+example we know that the expected net benefit under current information
+is 1, the mean of the distribution of treatment 2’s net
+benefit.</p></li>
+<li><p>Random sampling can be used to illustrate how to compute the
+expected net benefit given perfect information. Each sample of parameter
+values mimics a situation of decision-making given perfect information,
+where we know the parameters take these values. For each sample, we
+compare the corresponding treatment 2 net benefit to the threshold of
+zero, and prefer treatment 1 if the net benefit is negative, and
+treatment 2 if the net benefit is positive. The net benefit for each
+sample is the net benefit of the chosen treatment given the “known”
+sampled parameter values. The expected net benefit given perfect
+information is then computed as the average of this sample
+(<code>nb_perfect</code>).</p></li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>decision_current <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>nb_current <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>decision_perfect <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(outputs_nb<span class="sc">$</span>t2 <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>nb_perfect <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(decision_perfect <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">0</span>, outputs_nb<span class="sc">$</span>t2)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>(evpi1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(nb_perfect) <span class="sc">-</span> nb_current)</span></code></pre></div>
+<pre><code>## [1] 0.4778316</code></pre>
+<p>In practice we would not usually know the exact expectation (under
+the current uncertainty distribution) of the net benefit for any
+treatment, so we must compute it as the mean of the random sample. In
+this case, <code>colMeans(outputs_nb)</code> would give a vector of the
+expected net benefit for each treatment. The maximum of these is the net
+benefit of the decision we take under current information, which in this
+case is 1.0018431. This would become closer to the exact value of 1, the
+more random samples are drawn.</p>
+<p>An alternative view of EVPI is in terms of <em>opportunity loss</em>,
+which is the net benefit of the better decision we should have made (if
+we had known the truth), minus the net benefit of the decision we did
+make. The opportunity loss can be computed at each sample as follows.
+The EVPI is the mean of the opportunity loss.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>opp_loss <span class="ot">&lt;-</span> nb_perfect <span class="sc">-</span> nb_current</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(opp_loss)</span></code></pre></div>
+<pre><code>## [1] 0.4778316</code></pre>
+</div>
+<div id="using-the-voi-package-to-calculate-evpi" class="section level4">
+<h4>Using the <code>voi</code> package to calculate EVPI</h4>
+<p>The <code>voi</code> package contains a simple function
+<code>evpi</code> to compute the EVPI using the above procedure. The
+function automatically detects whether your outputs are in net benefit
+or cost-effectiveness format.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(voi)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">evpi</span>(outputs_nb)</span></code></pre></div>
+<pre><code>## [1] 0.4759885</code></pre>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evpi</span>(outputs_cea)</span></code></pre></div>
+<pre><code>##   k      evpi
+## 1 1 0.4759885
+## 2 2 0.4028003
+## 3 3 0.4174207</code></pre>
+<p>Note the result is slightly different from <code>evpi1</code>, since
+it uses the sample-based estimate of 1.0018431 of the expected net
+benefit under current information, rather than the known expectation of
+1.</p>
+</div>
+<div id="analytic-computation" class="section level4">
+<h4>Analytic computation</h4>
+<p>In this simple example, the EVPI can also be calculated “by hand”,
+because the model just involves normal distributions. The probability
+that the decision under perfect information agrees with the decision
+under current information, in this case, is the probability that the
+true value of a <span class="math inline">\(N(1, \sqrt{5})\)</span> is
+actually positive.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>prob_correct <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fu">sqrt</span>(<span class="dv">5</span>))</span></code></pre></div>
+<p>The mean of <code>nb_perfect</code> can then be calculated as the
+expected net benefit given a correct decision, multiplied by the
+probability of a correct decision. The former is the mean of the values
+of <code>outputs_nb$t2</code> which are positive, which is the mean of a
+<span class="math inline">\(N(1,\sqrt{5})\)</span> truncated below at
+zero. The mean of the truncated normal distribution has a <a href="https://en.wikipedia.org/wiki/Truncated_normal_distribution">known
+analytic form</a>, represented in the following R function.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mean_truncnorm <span class="ot">&lt;-</span> <span class="cf">function</span>(mu, sig, <span class="at">lower=</span><span class="sc">-</span><span class="cn">Inf</span>, <span class="at">upper=</span><span class="cn">Inf</span>){ </span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span> (lower<span class="sc">-</span>mu)<span class="sc">/</span>sig</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span> (upper<span class="sc">-</span>mu)<span class="sc">/</span>sig</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  mu <span class="sc">+</span> sig <span class="sc">*</span> (<span class="fu">dnorm</span>(a) <span class="sc">-</span> <span class="fu">dnorm</span>(b)) <span class="sc">/</span> (<span class="fu">pnorm</span>(b) <span class="sc">-</span> <span class="fu">pnorm</span>(a))</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>enb_correct <span class="ot">&lt;-</span> <span class="fu">mean_truncnorm</span>(<span class="dv">1</span>, <span class="fu">sqrt</span>(<span class="dv">5</span>), <span class="at">lower=</span><span class="dv">0</span>) </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>mean_nb_perfect <span class="ot">&lt;-</span> enb_correct <span class="sc">*</span> prob_correct</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>(evpi_exact <span class="ot">&lt;-</span> mean_nb_perfect <span class="sc">-</span> nb_current)</span></code></pre></div>
+<pre><code>## [1] 0.4798107</code></pre>
+<p>This is the exact value of the EVPI in this example, which differs
+slightly from the estimate based on Monte Carlo simulation.
+Unfortunately most realistic decision-analytic models do not have such a
+nice form, and we must rely on Monte Carlo methods to calculate the
+expected value of information.</p>
+</div>
+</div>
+<div id="evppi" class="section level2">
+<h2>Expected value of partial perfect information</h2>
+<p>The <em>expected value of partial perfect information</em> (EVPPI)
+for a parameter <span class="math inline">\(\phi\)</span> in a
+decision-analytic model is the expected value of learning the exact
+value of that parameter, while the other parameters remain uncertain.
+<span class="math inline">\(\phi\)</span> can comprise a single scalar
+parameter, or multiple parameters. If <span class="math inline">\(\phi\)</span> refers to multiple parameters then
+the EVPPI describes the expected value of learning <em>all</em> of these
+parameters, often referred to as the <em>multiparameter</em> EVPPI.</p>
+<p>The EVPPI is defined as the expected net benefit given perfect
+knowledge of <span class="math inline">\(\phi\)</span>, minus the
+expected net benefit given current information.</p>
+<p>The function <code>evppi</code> can be used to compute this.</p>
+<p>There are a variety of alternative computational methods implemented
+in this function. The default methods are based on nonparametric
+regression, and come from <a href="https://doi.org/10.1177/0272989X13505910">Strong et
+al. (2013)</a>. If there are four or fewer parameters, then a
+generalized additive model is used (the default spline model in
+<code>gam</code> from the <code>mgcv</code> package). With five or more,
+then Gaussian process regression is used.</p>
+<div id="invoking-the-evppi-function." class="section level3">
+<h3>Invoking the <code>evppi</code> function.</h3>
+<p>To call <code>evppi</code>, supply a sample of outputs and inputs (in
+the same form as defined above) in the first two arguments. The
+parameter or parameters of interest (whose EVPPI is desired) is supplied
+in the <code>&quot;pars&quot;</code> argument. This can be expressed in various
+ways.</p>
+<p><strong>(a) As a vector</strong>. The joint EVPPI is computed for all
+parameters in this vector. If the vector has more than one element, then
+the function returns the expected value of perfect information on all of
+these parameters simultaneously (described as the “multiparameter” EVPPI
+by <a href="https://doi.org/10.1177/0272989X13505910">Strong et
+al.</a>).</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>)</span></code></pre></div>
+<pre><code>##   pars      evppi
+## 1   p1 0.08210074</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>))</span></code></pre></div>
+<pre><code>##    pars     evppi
+## 1 p1,p2 0.4759885</code></pre>
+<p><strong>(b) As a list</strong>. A separate EVPPI is computed for each
+element of the list. In the second example below, this is the EVPPI of
+<span class="math inline">\(p_1\)</span>, followed by the multiparameter
+EVPPI of <span class="math inline">\((p_1,p_2)\)</span>. Note that the
+multiparameter EVPPI is the theoretically same as the EVPI if, as in
+this case, the vector includes all of the parameters in the model
+(though note the difference from EVPI estimates above due to the
+different computational method).</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">list</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>))</span></code></pre></div>
+<pre><code>##   pars      evppi
+## 1   p1 0.08210074
+## 2   p2 0.39029827</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">list</span>(<span class="st">&quot;p1&quot;</span>,<span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>)))</span></code></pre></div>
+<pre><code>##    pars      evppi
+## 1    p1 0.08210074
+## 2 p1,p2 0.47598851</code></pre>
+<p>The <code>evppi</code> function returns a data frame with columns
+indicating the parameter (or parameters), and the corresponding EVPPI.
+If the outputs are in cost-effectiveness analysis format, then a
+separate column is returned indicating the willingness-to-pay.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_cea, inputs, <span class="at">pars=</span><span class="fu">list</span>(<span class="st">&quot;p1&quot;</span>,<span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>)))</span></code></pre></div>
+<pre><code>##    pars k      evppi
+## 1    p1 1 0.08210074
+## 2    p1 2 0.17052564
+## 3    p1 3 0.25895085
+## 4 p1,p2 1 0.47598851
+## 5 p1,p2 2 0.40280031
+## 6 p1,p2 3 0.41742073</code></pre>
+</div>
+<div id="changing-the-default-calculation-method" class="section level3">
+<h3>Changing the default calculation method</h3>
+<p>The method can be changed by supplying the <code>method</code>
+argument to <code>evppi</code>. Some methods have additional options to
+tune them. For a full list of these options, see
+<code>help(evppi)</code>.</p>
+<div id="gaussian-process-regression" class="section level4">
+<h4>Gaussian process regression</h4>
+<p>(from <a href="https://doi.org/10.1177/0272989X13505910">Strong et
+al. (2013)</a>). The number of random samples to use in this computation
+can be changed using the <code>nsim</code> argument, which can be useful
+for this method as it can be prohibitive for large samples. Here the
+sample of 10000 is reduced to 1000.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;gp&quot;</span>, <span class="at">nsim=</span><span class="dv">1000</span>)</span></code></pre></div>
+<pre><code>##   pars      evppi
+## 1   p1 0.08834038</code></pre>
+</div>
+<div id="earth" class="section level4">
+<h4>Multivariate adaptive regression splines</h4>
+<p>This is a variant of generalized additive models based on linear
+splines, which uses a package called <a href="https://CRAN.R-project.org/package=earth">earth</a>.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;earth&quot;</span>)</span></code></pre></div>
+<pre><code>##   pars      evppi
+## 1   p1 0.08810086</code></pre>
+<p>While the merits of this method for EVPPI computation have not been
+systematically investigated, I have found this to be generally faster
+than comparable <code>mgcv</code> spline models for similar levels of
+accuracy and around 5 or fewer parameters.</p>
+</div>
+<div id="inla-method" class="section level4">
+<h4>INLA method</h4>
+<p>(from <a href="https://doi.org/10.1002/sim.6983">Heath et al.</a>, <a href="https://doi.org/10.1007/978-3-319-55718-2">Baio et al.</a> ). This
+needs the following extra packages to be installed, using the following
+commands.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;INLA&#39;</span>, <span class="at">repos=</span><span class="st">&#39;https://inla.r-inla-download.org/R/stable&#39;</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;splancs&#39;</span>)</span></code></pre></div>
+<p>It is only applicable to calculating the multiparameter EVPPI for 2
+or more parameters.</p>
+<p>In this toy example it is overkill, since the two-parameter EVPPI is
+simply the EVPI, and the default method needs an esoteric tweak
+(<code>pfc_struc</code>) to work.</p>
+<p>However it has been found to be more efficient than the Gaussian
+process method in many other situations. See <a href="https://doi.org/10.1002/sim.6983">Heath et al.</a>, <a href="https://doi.org/10.1007/978-3-319-55718-2">Baio et al.</a> for
+more details about implementing and tuning this method.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>), <span class="at">method=</span><span class="st">&quot;inla&quot;</span>, <span class="at">pfc_struc=</span><span class="st">&quot;iso&quot;</span>)</span></code></pre></div>
+</div>
+<div id="bart" class="section level4">
+<h4>Bayesian additive regression trees (BART)</h4>
+<p>This is another general nonparametric regression procedure. It is
+designed for regression with lots of predictors, so it may be
+particularly efficient for calculating multiparameter EVPPI, as the
+following demonstration shows.</p>
+<p>The <code>voi</code> package includes a (fictitious) example health
+economic model based on a decision tree and Markov model: see the help
+page <code>voi::chemo_model</code>. There are 14 uncertain parameters.
+Outputs and inputs from probabilistic analysis are stored in the
+datasets <code>chemo_nb</code> (net benefit for willingness-to-pay
+£20000) and <code>chemo_pars</code>. The multiparameter EVPPI for all
+fourteen of these parameters is by definition equal to the EVPI.</p>
+<p>Using the BART estimation method, the EVPPI estimate for all 14
+parameters is very close to the estimate of the EVPI, and the
+computation is quick (about 16 seconds on my laptop. Call as
+<code>evppi(...,verbose=TRUE)</code> to see the progress of the
+estimation).</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(chemo_nb, chemo_pars, <span class="at">pars=</span><span class="fu">colnames</span>(chemo_pars), <span class="at">method=</span><span class="st">&quot;bart&quot;</span>)</span></code></pre></div>
+<pre><code>##                                                                                                                                                                                        pars
+## 1 p_side_effects_t1,p_side_effects_t2,c_home_care,c_hospital,c_death,u_recovery,u_home_care,u_hospital,logor_side_effects,p_hospitalised_total,p_died,lambda_home,lambda_hosp,rate_longterm
+##      evppi
+## 1 368.4953</code></pre>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evpi</span>(chemo_nb)</span></code></pre></div>
+<pre><code>## [1] 368.6051</code></pre>
+<p>The BART estimation is being performed using the <code>bart()</code>
+function from the <a href="https://CRAN.R-project.org/package=dbarts">dbarts</a> package, and
+in this case the function’s default settings are used.</p>
+<p>While the BART method has not been investigated systematically as a
+way of estimating EVPPI, these are promising results.</p>
+</div>
+<div id="tuning-the-generalized-additive-model-method" class="section level4">
+<h4>Tuning the generalized additive model method</h4>
+<p>The generalized additive model formula can be changed with the
+<code>gam_formula</code> argument. This is supplied to the
+<code>gam</code> function from the <code>mgcv</code> package. The
+default formula uses a tensor product, and if there are more than four
+parameters, then a basis dimension of 4 terms per parameter is
+assumed.<br />
+A challenge of estimating EVPPI using GAMs is to define a GAM that is
+sufficiently flexible to represent how the outputs depend on the inputs,
+but can also be estimated in practice, given the complexity of the GAM
+and the number of random samples available to fit it to.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>), <span class="at">method=</span><span class="st">&quot;gam&quot;</span>, <span class="at">gam_formula=</span><span class="st">&quot;s(p1) + s(p2)&quot;</span>)</span></code></pre></div>
+<pre><code>##    pars     evppi
+## 1 p1,p2 0.4759885</code></pre>
+<p>Note that if there are spaces in the variable names in
+<code>inputs</code> and <code>pars</code>, then for
+<code>gam_formula</code> the spaces should be converted to underscores,
+or else an <code>&quot;unexpected symbol&quot;</code> error will be returned from
+<code>gam</code>.</p>
+<p>A standard error for the EVPPI estimates from the GAM method,
+resulting from uncertainty about the parameters of the GAM
+approximation, can be obtained by calling <code>evppi</code> with
+<code>se=TRUE</code>. This uses <span class="math inline">\(B\)</span>
+samples from the distribution of the GAM parameters, thus the standard
+error can be estimated more accurately by increasing B.</p>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">se=</span><span class="cn">TRUE</span>, <span class="at">B=</span><span class="dv">100</span>)</span></code></pre></div>
+<pre><code>##   pars      evppi          se
+## 1   p1 0.08210074 0.007093807</code></pre>
+</div>
+<div id="single-parameter-methods" class="section level4">
+<h4>Single-parameter methods</h4>
+<p>These are only applicable for computing the EVPPI for a single scalar
+parameter. They are supplied in the package for academic interest, but
+for single-parameter EVPPI we have found it to be sufficiently reliable
+to use the default GAM method, which requires less tuning than these
+methods.</p>
+<p>The method of <a href="https://doi.org/10.1177/0272989X12465123">Strong and
+Oakley</a>:</p>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">n.blocks=</span><span class="dv">20</span>, <span class="at">method=</span><span class="st">&quot;so&quot;</span>)</span></code></pre></div>
+<pre><code>##   pars      evppi
+## 1   p1 0.07997543</code></pre>
+<p>The method of <a href="https://doi.org/10.1016/j.jval.2012.10.018">Sadatsafavi et
+al.</a>:</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;sal&quot;</span>)</span></code></pre></div>
+<pre><code>##   pars      evppi
+## 1   p1 0.08151919</code></pre>
+</div>
+</div>
+<div id="evppimc" class="section level3">
+<h3>Traditional Monte Carlo nested loop method</h3>
+<p>(see e.g. <a href="https://doi.org/10.1177/0272989x07302555">Brennan
+et al.</a>)</p>
+<p>This is generally too slow to provide reliable EVPPI estimates in
+realistic models, but is provided in this package for technical
+completeness.</p>
+<p>This method is available in the function <code>evppi_mc</code>. It
+requires the user to supply two functions; one to evaluate the
+decision-analytic model, and one to generate parameter values.</p>
+<div id="model-evaluation-function" class="section level4">
+<h4>Model evaluation function</h4>
+<p>This function evaluates the decision-analytic model for specific
+parameter values. This must have one argument for each parameter. The
+return value can be in either a “net benefit” form or a “costs and
+effects” form. The “net benefit” form is a vector giving the net benefit
+for each decision option.</p>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>model_fn_nb <span class="ot">&lt;-</span> <span class="cf">function</span>(p1, p2){ </span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">0</span>, p1 <span class="sc">-</span> p2) </span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>The “costs and effects” form is a matrix with two rows, and one
+column for each decision option. The rows gives the effects and costs
+respectively for each decision option. If they have names
+<code>&quot;e&quot;</code> and <code>&quot;c&quot;</code> then these are assumed to identify
+the effects and costs. Otherwise the first row is assumed to contain the
+effects, and the second the costs.</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>model_fn_cea <span class="ot">&lt;-</span> <span class="cf">function</span>(p1, p2){ </span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(<span class="at">e =</span> <span class="fu">c</span>(<span class="dv">0</span>, p1), </span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">c =</span> <span class="fu">c</span>(<span class="dv">0</span>, p2)) </span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="parameter-simulation-function" class="section level4">
+<h4>Parameter simulation function</h4>
+<p>This function generates a random sample of <span class="math inline">\(n\)</span> values from the current (joint)
+uncertainty distribution of the model parameters. This returns a data
+frame with <span class="math inline">\(n\)</span> rows and one named
+column for each parameter.</p>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>par_fn <span class="ot">&lt;-</span> <span class="cf">function</span>(n){</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p1 =</span> <span class="fu">rnorm</span>(n, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">p2 =</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">2</span>))</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="invoking-evppi_mc" class="section level4">
+<h4>Invoking <code>evppi_mc</code></h4>
+<p>These functions are then supplied as arguments to
+<code>evppi_mc</code>, along with the number of samples to draw in the
+inner and outer loops. 1000 inner samples and 100 outer samples give a
+reasonable EVPPI estimate in this example, but many more samples may be
+required for the result to converge to the EVPPI in more complex
+models.</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi_mc</span>(model_fn_nb, par_fn, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">ninner=</span><span class="dv">1000</span>, <span class="at">nouter=</span><span class="dv">100</span>)</span></code></pre></div>
+</div>
+<div id="accounting-for-parameter-correlation" class="section level4">
+<h4>Accounting for parameter correlation</h4>
+<p>We may want the EVPPI for a parameter which is correlated with
+another parameter. To account for this correlation, <code>par_fn</code>
+requires an extra argument or arguments to enable a sample to be drawn
+from the appropriate conditional distribution. For example, the function
+below specifies a bivariate normal distribution for <span class="math inline">\((p_1,p_2)\)</span> where a correlation is induced
+by defining <span class="math inline">\(E(p_2|p_1) = p_1\)</span>. To
+draw a sample from the conditional distribution of <span class="math inline">\(p_2\)</span> given <span class="math inline">\(p_1=2\)</span>, for example, call
+<code>par_fn_corr(1, p1=2)$p2</code>.</p>
+<p>If the argument <code>p1</code> is not supplied, then the function
+should return a sample from the joint distribution marginalised over
+<span class="math inline">\(p_1\)</span>, as in this case where if we do
+not supply <code>p1</code> then a random <code>p1</code> is drawn
+followed by <code>p2|p1</code>.</p>
+<p>A function of this form should then be passed to
+<code>evppi_mc</code> if the parameters are correlated. This allows
+<code>evppi_mc</code> to draw from the appropriate distribution in the
+inner loop.</p>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>par_fn_corr <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">p1=</span><span class="cn">NULL</span>){</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  p1_new <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.null</span>(p1)) <span class="fu">rnorm</span>(n, <span class="dv">1</span>, <span class="dv">1</span>) <span class="cf">else</span> p1</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p1 =</span> p1_new,</span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">p2 =</span> <span class="fu">rnorm</span>(n, p1_new, <span class="dv">2</span>))</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi_mc</span>(model_fn_nb, par_fn_corr, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">ninner=</span><span class="dv">1000</span>, <span class="at">nouter=</span><span class="dv">100</span>)</span></code></pre></div>
+</div>
+</div>
+</div>
+<div id="evsi" class="section level2">
+<h2>Expected value of sample information</h2>
+<p>The <em>expected value of sample information</em> is the expected
+value of collecting a specific amount of data from a study designed to
+give information about some model parameter or parameters. It is defined
+as the expected net benefit given the study data, minus the expected net
+benefit with current information.</p>
+<p>The function <code>evsi</code> can be used to calculate this. The
+default method is based on nonparametric regression (from <a href="https://dx.doi.org/10.1177%2F0272989X15575286">Strong et al.</a>).
+This requires the user to either</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>supply an R function to generate and summarise the study data,
+or</p></li>
+<li><p>use one of the built-in study designs, and specify which of the
+model parameters are informed by this study.</p></li>
+</ol>
+<p>To illustrate how to use <code>evsi</code>, suppose we want to
+collect a sample of <span class="math inline">\(n\)</span>
+normally-distributed observations in order to get a better estimate of
+the treatment 2 effectiveness <span class="math inline">\(p_1\)</span>.
+Under current information, <span class="math inline">\(p_1\)</span> is
+distributed as <span class="math inline">\(N(1,1)\)</span>. After
+collecting the sample, we would expect this distribution to become more
+precise, hence reduce the chance of making a wrong decision. The EVSI
+measures the expected improvement in net benefit from this sample.</p>
+<p>Denote the study data as <span class="math inline">\(x_1,\ldots,x_n\)</span>, and suppose that they are
+distributed as <span class="math inline">\(x_i \sim N(p_1,
+\sigma)\)</span>. Hence the <em>mean</em> of the sample <span class="math inline">\(\bar{x} = \frac{1}{n}\sum_{i=1}^n x_i\)</span> is
+a <em>summary statistic</em> containing the information provided by the
+data about <span class="math inline">\(p_1\)</span>.</p>
+<p>The sample mean is distributed as <span class="math inline">\(\bar{x}
+\sim N(p_1, \sigma / \sqrt{n})\)</span>. Suppose for simplicity that the
+sampling variance <span class="math inline">\(\sigma\)</span> of the
+data is known to equal 1.</p>
+<p>To calculate the EVSI using this method, we generate a sample from
+the <em>predictive distribution</em> of this summary statistic under
+current information. This is achieved by generating a value of <span class="math inline">\(p_1\)</span> from its current <span class="math inline">\(N(1,1)\)</span> distribution, followed by a value
+of <span class="math inline">\(\bar{x}\)</span> from <span class="math inline">\(N(p_1, \sigma / \sqrt{n})\)</span>.</p>
+<div id="function-to-generate-study-data" class="section level3">
+<h3>Function to generate study data</h3>
+<p>The function should generate a sample from the predictive
+distribution of the summary statistic, given a sample
+<code>inputs</code> from the current uncertainty distribution of the
+parameters.</p>
+<p><code>inputs</code> has the same format as described above, a data
+frame with one row per sample and one column per parameter.</p>
+<p>The function must return a data frame with one row per sample, and
+one column per parameter that is informed by the study data. Each data
+frame cell contains a summary statistic for that parameter from a
+simulated study.</p>
+<p>The function <code>datagen_normal</code> below does this in a
+vectorised way for the example. Each row of the returned data frame is
+based on a different simulated <span class="math inline">\(p_1\)</span>
+taken from the first column of <code>inputs</code>, and contains a
+summary statistic <span class="math inline">\(\bar{x}\)</span> obtained
+from a dataset generated conditionally on that value of <span class="math inline">\(p_1\)</span>.</p>
+<p>The sample size is included as an argument <code>n</code> to the data
+generation function. The names of the returned data frame can be
+anything (<code>xbar</code> was used in this case to be
+descriptive).</p>
+<p>The <code>evsi</code> function can then be used to compute the EVSI
+for a series of different sample sizes from this design. Note how the
+EVSI converges to the EVPPI as the sample size increases.</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>datagen_normal <span class="ot">&lt;-</span> <span class="cf">function</span>(inputs, <span class="at">n=</span><span class="dv">100</span>, <span class="at">sd=</span><span class="dv">1</span>){</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">xbar =</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(inputs),</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean =</span> inputs[,<span class="st">&quot;p1&quot;</span>],</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">sd =</span> sd <span class="sc">/</span> <span class="fu">sqrt</span>(n)))</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">datagen_fn =</span> datagen_normal, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">100</span>,<span class="dv">1000</span>))</span></code></pre></div>
+<pre><code>##      n       evsi
+## 1   10 0.07440250
+## 2  100 0.08106261
+## 3 1000 0.08189925</code></pre>
+</div>
+<div id="evsibuiltin" class="section level3">
+<h3>Built-in study designs</h3>
+<p>The function <code>datagen_normal</code> is also included in the
+<code>voi</code> package as a built-in study design. To invoke the
+<code>evsi</code> function for a built-in study design, we have to
+supply the name of the design (in this case <code>&quot;normal_known&quot;</code>)
+and the name of the parameter or parameters (corresponding to a column
+of “inputs”) which is estimated by the study data.</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>), <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>)</span></code></pre></div>
+<pre><code>##      n       evsi
+## 1  100 0.07998166
+## 2 1000 0.08197188</code></pre>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_cea, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>), <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>)</span></code></pre></div>
+<pre><code>##      n k       evsi
+## 1  100 1 0.07976014
+## 2  100 2 0.16666306
+## 3  100 3 0.25356597
+## 4 1000 1 0.08216435
+## 5 1000 2 0.17052103
+## 6 1000 3 0.25887874</code></pre>
+<p>The known standard deviation defaults to 1, but can be changed,
+e.g. to 2, by calling <code>evsi</code> with an <code>aux_pars</code>
+argument, e.g. <code>evsi(..., aux_pars=list(sd=2), ...)</code>.</p>
+<p>Note that the results will be slightly different every time the
+<code>evsi</code> function is invoked with the same arguments, due to
+Monte Carlo error from generating the data (unless the seed is set with
+the R function <code>set_seed</code> before each invocation).</p>
+<p>Other built-in study designs include</p>
+<p><code>&quot;binary&quot;</code>: A single sample of observations of a binary
+outcome. Requires one parameter to be specified in <code>pars</code>,
+that is, the probability of the outcome.</p>
+<p><code>&quot;trial_binary&quot;</code>: A two-arm trial with a binary outcome.
+Requires two parameters to be specified in <code>pars</code>: the
+probability of the outcome in arm 1 and 2 respectively. The sample size
+is the same in each arm, specifed in the <code>n</code> argument to
+<code>evsi</code>, and the binomial outcomes are returned in the first
+and second column respectively.</p>
+</div>
+<div id="importance-sampling-method" class="section level3">
+<h3>Importance sampling method</h3>
+<p>An alternative method comes from <a href="https://doi.org/10.1177/0272989X15583495">Menzies (2015)</a> and
+is based on importance sampling. This can be invoked as
+<code>evsi(..., method=&quot;is&quot;)</code>.</p>
+<p>As well as a data generation function in the above format, this also
+requires the user to supply a <em>likelihood function</em> for the study
+data.</p>
+<p>This is illustrated here for the simple normal example. The
+likelihood function acts on one row of the data frame <span class="math inline">\(Y\)</span> which is produced by the data
+generation function, and returns a data frame with number of rows
+matching the rows of <code>inputs</code>. Each row of the returned data
+frame gives the sampling density for that row of <span class="math inline">\(Y\)</span> given the corresponding parameter
+values in <code>inputs</code>. The corresponding EVSI calculation then
+involves building a large matrix of likelihoods for combinations of
+simulated datasets and simulated parameters.</p>
+<p>Any user-supplied likelihood function should consistently define the
+same model for the data as the data generation function (the package
+does not check this!), and any names of parameters and outputs should
+match the names defined in <code>inputs</code> and the data generation
+function.</p>
+<p>This method is typically slower than the default nonparametric
+regression method, so it may be worth setting <code>nsim</code> to a
+value lower than the number of samples in <code>inputs</code>. Below
+<code>nsim=1000</code> is used so that only 1000 samples are used,
+instead of the full 10000 samples contained in <code>inputs</code>.</p>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>likelihood_normal <span class="ot">&lt;-</span> <span class="cf">function</span>(Y, inputs, <span class="at">n=</span><span class="dv">100</span>, <span class="at">sig=</span><span class="dv">1</span>){</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> inputs[,<span class="st">&quot;p1&quot;</span>]</span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dnorm</span>(Y[,<span class="st">&quot;xbar&quot;</span>], mu, sig<span class="sc">/</span><span class="fu">sqrt</span>(n))</span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">datagen_fn =</span> datagen_normal, <span class="at">likelihood =</span> likelihood_normal, </span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">n=</span><span class="dv">100</span>, <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;is&quot;</span>, <span class="at">nsim=</span><span class="dv">1000</span>)</span></code></pre></div>
+<pre><code>##     n      evsi
+## 1 100 0.0864487</code></pre>
+<p>Again, this study model is available as a built-in study design, so
+instead of writing a user-defined likelihood and data generation
+function, <code>evsi</code> can also be invoked with
+<code>study=&quot;normal_known&quot;, method=&quot;is&quot;</code>.</p>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="dv">100</span>, <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;is&quot;</span>, <span class="at">nsim=</span><span class="dv">1000</span>)</span></code></pre></div>
+<pre><code>##     n       evsi
+## 1 100 0.08619358</code></pre>
+</div>
+<div id="moment-matching-method" class="section level3">
+<h3>Moment matching method</h3>
+<p>The momemt matching method from <a href="https://doi.org/10.1177/0272989X17738515">Heath et al.</a> is
+available as <code>evsi(..., method=&quot;mm&quot;)</code>. This includes the
+extension of this method to efficiently estimate the EVSI for the same
+design but with many different sample sizes (from <a href="https://doi.org/10.1177/0272989X19837983">Heath et al</a>).</p>
+<p>Roughly, this method works as follows (see <a href="https://doi.org/10.1177/0272989X17738515">Heath et al.</a> for
+full details)</p>
+<ul>
+<li><p>a small set of values <span class="math inline">\(\theta_q: q =
+1,\ldots, Q\)</span> are simulated for the decision model parameters
+<span class="math inline">\(\theta\)</span> (typically <span class="math inline">\(Q&lt;50\)</span> is sufficient).</p></li>
+<li><p>for each <span class="math inline">\(\theta_q\)</span>, future
+study data <span class="math inline">\(x_q|\theta_q\)</span> are
+generated from the sampling distribution (as specified through
+<code>study</code> for built-in study designs, or
+<code>datagen_fn</code> for custom designs).</p></li>
+<li><p>a sample is generated from the posterior distribution of <span class="math inline">\(\theta | x_q\)</span>.</p></li>
+<li><p>the posterior variance <span class="math inline">\(v_q\)</span>
+of the decision model net benefit <span class="math inline">\(NB(\theta)\)</span> is deduced from this
+sample.</p></li>
+<li><p>the average posterior variance over all samples <span class="math inline">\(q\)</span> is compared to the prior variance,
+obtaining an estimate of the proportion of uncertainty explained by the
+proposed study. This is used as a “shrinkage” factor to modify the
+regression-based EVPPI computation to produce an estimate of the
+EVSI.</p></li>
+</ul>
+<p>To use the moment matching method, <code>evsi</code> needs to know
+some information that is not needed by the other EVSI calculation
+functions. This includes:</p>
+<ul>
+<li><p>a function <code>model_fn</code> to evaluate the decision model,
+and a function <code>par_fn</code> to sample from the distribution of
+the model parameters under current information. These are supplied in
+the same form as in the <a href="#evppimc">EVPPI Monte Carlo method
+function</a>, <code>evppi_mc</code>.</p></li>
+<li><p>information about how data <span class="math inline">\(x_q\)</span> are analysed to produce the
+posterior.</p>
+<p>For the built-in study designs, nothing extra is needed from the user
+here, as this information is built in.</p>
+<p>For custom study designs specified using <code>datagen_fn</code>, an
+extra function should be defined, and supplied as the
+<code>analysis_fn</code> argument to
+<code>evsi(..., method=&quot;mm&quot;)</code>. This function should take three
+arguments:</p>
+<ul>
+<li><p><code>data</code> a data frame with names matching the output of
+<code>datagen_fn</code>,</p></li>
+<li><p><code>args</code> a list of constants for the analysis that the
+user might want to vary, e.g. prior parameters or options for posterior
+computation. The user supplies these in
+<code>analysis_args</code>.</p></li>
+<li><p><code>pars</code> names of the parameters whose posterior is
+being sampled.</p></li>
+</ul>
+<p>and return a data frame with each row containing a draw from the
+posterior distribution of the parameters named in the columns. If
+specialised Bayesian analysis software such as JAGS or Stan is needed,
+then this function should wrap around a complete call to this software.
+An example is given below.</p></li>
+<li><p><code>analysis_args</code>: a list of constants that the data
+analysis function needs to know. This is needed whether or not a
+built-in design is used. This would typically include parameters that
+define the prior distributions, and settings to control posterior
+computation (e.g. number of MCMC iterations). The specific components
+that are needed in this list depends on the study design, as specified
+by <code>analysis_fn</code> or <code>study</code>.</p></li>
+</ul>
+<div id="moment-matching-method-example-using-a-built-in-study-design" class="section level4">
+<h4>Moment matching method: example using a built-in study design</h4>
+<p>This is the first EVSI example computation <a href="#evsibuiltin">shown above</a>, implemented using the moment
+matching method with a study sample size of 1000.</p>
+<p>Recall the sampling distribution for the study data is a normal with
+known variance, specified through <code>study=&quot;normal_known&quot;</code>. The
+Bayesian inference procedure here is a simple conjugate normal analysis,
+and is built in to the package, so we do not need to supply
+<code>analysis_fn</code>.</p>
+<p>However we do need to supply <code>analysis_args</code>. The
+constants required by the conjugate normal analysis are the prior mean
+and SD of the parameter <code>p1</code>, and the sampling SD of an
+individual-level observation in the study, here <span class="math inline">\(\sigma=1\)</span>.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="dv">10000</span>, <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;mm&quot;</span>, <span class="at">Q=</span><span class="dv">30</span>,</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">model_fn =</span> model_fn_nb, <span class="at">par_fn =</span> par_fn,</span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">analysis_args =</span> <span class="fu">list</span>(<span class="at">prior_mean=</span><span class="dv">1</span>, <span class="at">prior_sd=</span><span class="dv">1</span>, <span class="at">sampling_sd=</span><span class="dv">1</span>, <span class="at">niter=</span><span class="dv">1000</span>))</span></code></pre></div>
+<pre><code>##       n       evsi
+## 1 10000 0.05094176</code></pre>
+<p>The estimate of the EVSI is fairly close to the result from the
+regression method. The moment matching method also computes the
+regression-based estimate of the EVPPI, so this is returned alongside
+the EVSI estimate.</p>
+<p>A lot of randomness is involved in the computation for this method,
+thus there is some Monte Carlo error and it is not reproducible unless
+the seed is set. This error can be controlled somewhat by changing <span class="math inline">\(Q\)</span> (default 30) in the call to
+<code>evsi</code>, the number of posterior samples (default 1000)
+through the <code>niter</code> component of <code>analysis_args</code>,
+and the size of <code>outputs</code> and <code>inputs</code> (as in most
+VoI calculation methods).</p>
+</div>
+<div id="moment-matching-method-example-using-a-custom-study-design" class="section level4">
+<h4>Moment matching method: example using a custom study design</h4>
+<p>A more complex decision model is included with the <code>voi</code>
+package, see <code>help(chemo_model)</code>. In this model, the key
+uncertain parameters describe the probabilities of an adverse outcome
+(risk of side-effects), <span class="math inline">\(p_1\)</span> and
+<span class="math inline">\(p_2\)</span>, under the standard of care and
+some novel treatment respectively. We want to design a study that
+informs only the <em>relative</em> effect of the new treatment on the
+risk of that outcome. The <em>baseline</em> risk <span class="math inline">\(p_1\)</span> would be informed by some other
+source. This might be because we believe that the decision population
+has the same relative risk as the population in the designed study, but
+the baseline risk may be different.</p>
+<p>To calculate the EVSI for the proposed study, we define two R
+functions:</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>a function to simulate study data</p></li>
+<li><p>a function defining a Bayesian model to analyse the potential
+study data.</p></li>
+</ol>
+<p><strong>Analysis function</strong>. First we show the function to
+analyse the data. We parameterise the relative treatment effect as a log
+odds ratio <span class="math inline">\(log(p_1/(1-p_1)) -
+log(p_2/(1-p_2))\)</span>, supposing that there is previous information
+about the likely size of this quantity that can be expressed as a
+Normal<span class="math inline">\((\mu,\sigma^2)\)</span> prior. The
+baseline risk <span class="math inline">\(p_1\)</span> is given a
+Beta<span class="math inline">\((a_1,b_1)\)</span> prior. These priors
+match the current uncertainty distributions used in <code>par_fn</code>
+and used to produce the parameter sample <code>inputs</code> supplied to
+<code>evsi</code>.</p>
+<p>Since this model does not have an analytic posterior distribution, we
+use JAGS (via the <code>rjags</code> R package) to implement MCMC
+sampling. It is not necessary to use JAGS however - the analysis
+function may call any Bayesian modelling software.</p>
+<p>The following R function encapsulates how the posterior is obtained
+from the data in this analysis.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>analysis_fn <span class="ot">&lt;-</span> <span class="cf">function</span>(data, args, pars){</span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">y=</span><span class="fu">c</span>(data[,<span class="st">&quot;y1&quot;</span>], data[,<span class="st">&quot;y2&quot;</span>]))</span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  design <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="fu">rep</span>(args<span class="sc">$</span>n, <span class="dv">2</span>))</span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  priors <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a1=</span><span class="dv">53</span>, <span class="at">b1=</span><span class="dv">60</span>, <span class="at">mu=</span><span class="fu">log</span>(<span class="fl">0.54</span>), <span class="at">sigma=</span><span class="fl">0.3</span>)</span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  jagsdat <span class="ot">&lt;-</span> <span class="fu">c</span>(dat, design, priors)</span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  or_jagsmod <span class="ot">&lt;-</span> <span class="st">&quot;</span></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="st">  model {</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a><span class="st">    y[1] ~ dbinom(p[1], n[1])</span></span>
+<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a><span class="st">    y[2] ~ dbinom(p[2], n[2])</span></span>
+<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a><span class="st">    p[1] &lt;- p1</span></span>
+<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a><span class="st">    p[2] &lt;- odds[2] / (1 + odds[2])</span></span>
+<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a><span class="st">    p1 ~ dbeta(a1, b1)</span></span>
+<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a><span class="st">    odds[1] &lt;- p[1] / (1 - p[1])</span></span>
+<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a><span class="st">    odds[2] &lt;- odds[1] * exp(logor)</span></span>
+<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a><span class="st">    logor ~ dnorm(mu, 1/sigma^2)</span></span>
+<span id="cb60-16"><a href="#cb60-16" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb60-17"><a href="#cb60-17" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;</span></span>
+<span id="cb60-18"><a href="#cb60-18" aria-hidden="true" tabindex="-1"></a>  or.jag <span class="ot">&lt;-</span> rjags<span class="sc">::</span><span class="fu">jags.model</span>(<span class="fu">textConnection</span>(or_jagsmod), </span>
+<span id="cb60-19"><a href="#cb60-19" aria-hidden="true" tabindex="-1"></a>                              <span class="at">data=</span>jagsdat, <span class="at">inits=</span><span class="fu">list</span>(<span class="at">logor=</span><span class="dv">0</span>, <span class="at">p1=</span><span class="fl">0.5</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb60-20"><a href="#cb60-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update</span>(or.jag, <span class="dv">100</span>, <span class="at">progress.bar=</span><span class="st">&quot;none&quot;</span>)</span>
+<span id="cb60-21"><a href="#cb60-21" aria-hidden="true" tabindex="-1"></a>  sam <span class="ot">&lt;-</span> rjags<span class="sc">::</span><span class="fu">coda.samples</span>(or.jag, <span class="fu">c</span>(<span class="st">&quot;logor&quot;</span>), <span class="dv">500</span>, <span class="at">progress.bar=</span><span class="st">&quot;none&quot;</span>)</span>
+<span id="cb60-22"><a href="#cb60-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">logor_side_effects =</span> <span class="fu">as.numeric</span>(sam[[<span class="dv">1</span>]][,<span class="st">&quot;logor&quot;</span>]))</span>
+<span id="cb60-23"><a href="#cb60-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>A full understanding of JAGS model specification and sampling syntax
+is beyond the scope of this vignette - we just explain what the
+<code>voi</code> package is expecting. The inputs and outputs of
+<code>analysis_fn</code> take the following form.</p>
+<ul>
+<li><p>The return value is a data frame with a sample from the posterior
+of the parameters “learnt” from the study to inform the decision model.
+There should be one column per parameter learnt. Here we will only be
+using the information gained about <code>logor_side_effects</code>, so
+there is only column. The names of the data frame (here
+<code>logor_side_effects</code>) should match the names of arguments to
+the decision model function supplied as the <code>model_fn</code>
+argument to <code>evsi</code> (here this function is
+<code>chemo_model_lor_nb</code>).</p></li>
+<li><p>The <code>data</code> input argument is a data frame with the
+outcome data from the study to be analysed. In this example, the study
+is a trial with two arms, and the study results are <code>&quot;y1&quot;</code>
+and <code>&quot;y2&quot;</code>, the number of people experiencing the outcome in
+each arm. One row of data is sufficient here, but in other cases
+(e.g. with individual-level data) we might need multiple rows to define
+the study data.</p>
+<p>The names (<code>&quot;y1&quot;</code> and <code>&quot;y2&quot;</code> here) should match
+the names of the data frame returned by the function to simulate the
+study data (<code>datagen_fn</code> below).</p></li>
+<li><p>The <code>args</code> input argument is a list of constants that
+are needed in the analysis. The sample size of the proposed study,
+supplied as the <code>n</code> argument to <code>evsi()</code> is
+automatically added to this list.</p>
+<p>In this example, <code>n</code> is the the size of each trial arm,
+and is available to the analysis code as <code>args$n</code>. The sample
+size could also have been hard-coded into the analysis code, but
+supplying it through <code>args</code> is advisable as it allows the
+EVSI calculation to be defined transparently in the call to
+<code>evsi()</code>, and allows multiple calculations to be easily done
+for different sample sizes by supplying a vector as the <code>n</code>
+argument to <code>evsi()</code>.</p>
+<p>Any other constants can be supplied through the
+<code>analysis_args</code> argument to <code>evsi()</code>. This might
+be used for constants that define prior distributions. In this example,
+these are instead hard-coded inside <code>analysis_fn</code>.</p></li>
+<li><p>The <code>pars</code> argument is not used in this example, but
+this is a more general way of setting the names of the returned data
+frame. The names supplied in the <code>pars</code> argument to the
+<code>evsi()</code> function will be automatically passed to this
+argument, so they can be used in naming the returned data frame. We
+might do this if we wanted to write a generic function to fit a
+particular Bayesian model, that we could use in different decision
+models or EVSI calculations. Here we simply hard-coded the names as
+<code>logor_side_effects</code> for clarity.</p></li>
+</ul>
+<p><strong>Data generation function</strong> As in previous examples,
+this takes an input data frame <code>inputs</code> with parameter values
+sampled from the current uncertainty distribution, and outputs a data
+frame with a corresponding sample from the predictive distribution of
+the data. An additional argument <code>n</code> defines the sample size
+of the study. Note in this example how <code>inputs</code> is
+parameterised in terms of a baseline risk and a log odds ratio, and we
+combine these to obtain the absolute risk in group 2.</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>datagen_fn <span class="ot">&lt;-</span> <span class="cf">function</span>(inputs, <span class="at">n=</span><span class="dv">100</span>){</span>
+<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  p1 <span class="ot">&lt;-</span> inputs[,<span class="st">&quot;p_side_effects_t1&quot;</span>]</span>
+<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  logor <span class="ot">&lt;-</span> inputs[,<span class="st">&quot;logor_side_effects&quot;</span>]</span>
+<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  odds1 <span class="ot">&lt;-</span> p1 <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> p1)</span>
+<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  odds2 <span class="ot">&lt;-</span> odds1 <span class="sc">*</span> <span class="fu">exp</span>(logor)</span>
+<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>  p2 <span class="ot">&lt;-</span> odds2 <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> odds2)</span>
+<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>  nsim <span class="ot">&lt;-</span> <span class="fu">nrow</span>(inputs)</span>
+<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">y1 =</span> <span class="fu">rbinom</span>(nsim, n, p1),</span>
+<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">y2 =</span> <span class="fu">rbinom</span>(nsim, n, p2))</span>
+<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<p>Finally <code>evsi</code> is called to perform the EVSI calculation
+using the moment matching method.</p>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>ev <span class="ot">&lt;-</span> <span class="fu">evsi</span>(<span class="at">outputs=</span>chemo_nb, <span class="at">inputs=</span>chemo_pars, </span>
+<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">method=</span><span class="st">&quot;mm&quot;</span>,</span>
+<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">pars=</span><span class="st">&quot;logor_side_effects&quot;</span>, </span>
+<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">pars_datagen =</span> <span class="fu">c</span>(<span class="st">&quot;p_side_effects_t1&quot;</span>, <span class="st">&quot;logor_side_effects&quot;</span>), </span>
+<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">datagen_fn =</span> datagen_fn, <span class="at">analysis_fn =</span> analysis_fn, </span>
+<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">n =</span> <span class="dv">100</span>, <span class="at">Q =</span> <span class="dv">10</span>, </span>
+<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">model_fn =</span> chemo_model_lor_nb, <span class="at">par_fn =</span> chemo_pars_fn)</span></code></pre></div>
+<p>One aspect of the syntax of the <code>evsi</code> call is new for
+this example. <code>pars_datagen</code> identifies which parameters
+(columns of <code>inputs</code>) are required to generate data from the
+proposed study, and <code>pars</code> identifies which parameters are
+<em>learned</em> from the study. These are different in this example. We
+need to know the baseline risk <code>&quot;p_side_effects_t1&quot;</code> to be
+able to generate study data, but we then choose to <em>ignore</em> the
+data that the study provides about this parameter when measuring the
+value of the study.</p>
+<p>(In theory, these names need not be supplied to <code>evsi</code> if
+they are hard-coded into the analysis and data-generating functions, but
+it is safer in general to supply them, as they are required when using
+built-in study designs, and it allows the analysis and data-generating
+functions to be written in an abstract manner that can be re-used for
+different analyses).</p>
+</div>
+</div>
+</div>
+<div id="value-of-information-in-models-for-estimation" class="section level2">
+<h2>Value of Information in models for estimation</h2>
+<p>Suppose that the aim of the analysis is to get a precise estimate of
+a quantity, rather than to make an explicit decision between policies.
+VoI methodology can still be used to determine which uncertain
+parameters the estimate is most sensitive to (EVPPI) or the improvements
+in precision expected from new data (EVSI). The expected value of
+information is the expected <em>reduction in variance</em> of the
+quantity of interest given the further information.</p>
+<p>We illustrate with an example. Suppose we want to estimate the
+prevalence of an infection. There are two sources of information. We
+have survey data which we think is biased, so that the true infection
+rate is higher than the rate of infection observed in the survey. We
+then have an expert judgement about the extent of bias in the data, and
+uncertainty associated with this.</p>
+<p>Firstly, suppose the survey observed 100 people and 5 of them were
+infected. Using a vague Beta(0,0) prior (flat on the logit scale), the
+posterior distribution of the survey infection rate <span class="math inline">\(p_1\)</span> is a Beta(5,95). We draw a random
+sample from this.</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>, <span class="dv">5</span>, <span class="dv">95</span>)</span></code></pre></div>
+<p>Secondly, we guess that the true risk of being infected is twice the
+risk in the survey population, but we are uncertain about this relative
+risk. We might approximate our belief by placing a normal prior
+distribution on the log odds ratio <span class="math inline">\(\beta\)</span>, with a mean designed to reflect
+the doubled relative risk, and a variance that is high but concentrates
+the relative risk on positive values. Hence the true infection
+probability <span class="math inline">\(p_2\)</span> is a function of
+the two parameters <span class="math inline">\(p_1\)</span> and <span class="math inline">\(\beta\)</span>:</p>
+<p><span class="math display">\[p_2 = expit(logit(p_1) +
+\beta)\]</span>.</p>
+<p>We draw random samples from the current belief distributions of <span class="math inline">\(\beta\)</span> and <span class="math inline">\(p_2\)</span>, and then graphically compare the
+distributions of the infection probability <span class="math inline">\(p_1\)</span> in the survey data (black) and the
+true infection probability <span class="math inline">\(p_2\)</span>
+(red).</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="fl">0.8</span>, <span class="fl">0.4</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plogis</span>(<span class="fu">qlogis</span>(p1) <span class="sc">+</span> beta)</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(p1), <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">main=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">density</span>(p2), <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">col=</span><span class="fu">c</span>(<span class="st">&quot;black&quot;</span>,<span class="st">&quot;red&quot;</span>), <span class="at">lwd=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), </span>
+<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend=</span><span class="fu">c</span>(<span class="st">&quot;Surveyed infection probability&quot;</span>, <span class="st">&quot;True infection probability&quot;</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>The model <em>output</em> quantity is <span class="math inline">\(p_2\)</span>, and the model <em>inputs</em> are
+<span class="math inline">\(p_1\)</span> and <span class="math inline">\(\beta\)</span>. We now want to determine the
+expected value of further information. This is measured in terms of
+expected <em>reductions in variance</em> of <span class="math inline">\(p_2\)</span>. This has a decision-theoretic
+interpretation, with “loss” being measured by squared error of a
+parameter estimate compared to the true parameter value. See <a href="https://doi.org/10.1080/01621459.2018.1562932">Jackson et
+al. 2019</a>.</p>
+<div id="evpi-and-evppi-for-estimation" class="section level3">
+<h3>EVPI and EVPPI for estimation</h3>
+<p>The EVPI is trivially <span class="math inline">\(var(p_2)\)</span>,
+the variance under current information, which we can compute from the
+sample as</p>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(p2)</span></code></pre></div>
+<pre><code>## [1] 0.003436631</code></pre>
+<p>A more interesting quantity is the EVPPI for a parameter. It
+describes the expected reduction in variance given perfect knowledge of
+a particular parameter. In this example, we compute the EVPPI for <span class="math inline">\(p_1\)</span> and <span class="math inline">\(\beta\)</span>, respectively, defined as</p>
+<p><span class="math display">\[EVPPI[p_1] = var(p_2) - E(var(p_2|
+p_1))\]</span> <span class="math display">\[EVPPI[\beta] = var(p_2) -
+E(var(p_2 | \beta))\]</span></p>
+<p>These can be computed using nonparametric regression, as described in
+<a href="https://doi.org/10.1080/01621459.2018.1562932">Jackson et
+al. 2019</a>. This is implemented in the function <code>evppivar</code>
+in the <code>voi</code> package.</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>inputs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(p1, beta)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>(evppi_beta <span class="ot">&lt;-</span> <span class="fu">evppivar</span>(p2, inputs, <span class="at">par=</span><span class="st">&quot;beta&quot;</span>))</span></code></pre></div>
+<pre><code>##   pars       evppi
+## 1 beta 0.001432078</code></pre>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>(evppi_p1 <span class="ot">&lt;-</span> <span class="fu">evppivar</span>(p2, inputs, <span class="at">par=</span><span class="st">&quot;p1&quot;</span>))</span></code></pre></div>
+<pre><code>##   pars       evppi
+## 1   p1 0.001800679</code></pre>
+<p>Hence a slightly greater improvement in variance is expected from
+knowing the true risk in the biased sample, compared to knowing the
+relative odds of infection.</p>
+<p>These EVPPI values are easier to interpret if they are converted to
+the scale of a <em>standard deviation</em>. If we subtract the EVPPI
+from the original variance of <span class="math inline">\(p_2\)</span>
+we get, for example <span class="math inline">\(E(var(p_2) |
+p_1)\)</span>. The square root of this is an estimate of what the
+standard deviation of <span class="math inline">\(p_2\)</span> would be
+if we learnt <span class="math inline">\(p_1\)</span> (note that is not
+exactly the <em>expected</em> SD remaining, since we cannot swap the
+order of the square root and expectation operators).</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">var</span>(p2)) <span class="co"># or sd(p2)</span></span></code></pre></div>
+<pre><code>## [1] 0.05862279</code></pre>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">var</span>(p2) <span class="sc">-</span> evppi_beta<span class="sc">$</span>evppi)</span></code></pre></div>
+<pre><code>## [1] 0.04477224</code></pre>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">var</span>(p2) <span class="sc">-</span> evppi_p1<span class="sc">$</span>evppi)</span></code></pre></div>
+<pre><code>## [1] 0.04044691</code></pre>
+<p>Hence we would expect to reduce the SD of <span class="math inline">\(p_2\)</span> to around 2/3 of its original value
+by learning <span class="math inline">\(p_1\)</span> or <span class="math inline">\(\beta\)</span>.</p>
+</div>
+<div id="how-regression-based-evppi-estimation-works" class="section level3">
+<h3>How regression-based EVPPI estimation works</h3>
+<p>EVPPI is estimated here by <em>nonparametric regression</em> of the
+output on the input. Recall that the method of <a href="https://doi.org/10.1177/0272989X13505910">Strong et al. (2013)</a>
+was used in <code>evppi</code> for models with decisions. <a href="https://doi.org/10.1080/01621459.2018.1562932">Jackson et
+al. 2019</a> showed how this method applied in a wider class of
+problems, including models for estimation.</p>
+<p>To estimate the expected reduction in variance in <span class="math inline">\(p_2\)</span>, given knowledge of <span class="math inline">\(p_1\)</span>, the <code>evppivar</code> function
+fits a regression model with <code>p2</code> as the outcome, and
+<code>p1</code> as the single predictor. A generalized additive model
+based on splines is fitted using the <code>gam</code> function from the
+<code>mgcv</code> package.</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x=</span>p1, <span class="at">y=</span>p2, <span class="at">pch=</span><span class="st">&quot;.&quot;</span>)</span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> mgcv<span class="sc">::</span><span class="fu">gam</span>(p2 <span class="sc">~</span> <span class="fu">te</span>(p1, <span class="at">bs=</span><span class="st">&quot;cr&quot;</span>))</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>p1fit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(mod)</span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">sort</span>(p1), p1fit[<span class="fu">order</span>(p1)], <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Taking the variance of the <em>residuals</em> from this regression
+(observed minus fitted values) produces an estimate of <span class="math inline">\(E(var(p_2 | p_1 = x))\)</span>, intuitively, the
+expected variance given knowledge of <span class="math inline">\(p_1\)</span>, which, when subtracted from the
+variance of <span class="math inline">\(p_2\)</span>, gives the
+EVPPI.</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>p1res <span class="ot">&lt;-</span> p2 <span class="sc">-</span> p1fit</span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(p2) <span class="sc">-</span> <span class="fu">var</span>(p1res)</span></code></pre></div>
+<pre><code>## [1] 0.001801982</code></pre>
+<p>This agrees (up to Monte Carlo error) with the value produced by
+<code>evppivar</code>, which is obtained by a closely-related method, as
+the variance of the fitted values from this regression. This is equal to
+the total variance minus the variance of the residuals, through the “law
+of total variance”:</p>
+<p><span class="math display">\[var(Y) - E_{X}\left[var_{Y| X}(Y
+|X)\right] = var_{X} \left[E_{Y|X}(Y|X)\right]\]</span></p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(p1fit)</span></code></pre></div>
+<pre><code>## [1] 0.001800679</code></pre>
+</div>
+<div id="evsi-for-estimation" class="section level3">
+<h3>EVSI for estimation</h3>
+<p>Now suppose we planned to collect additional survey data on the
+prevalence of infection.</p>
+<p>First suppose that we can collect more data on the biased population
+that was used to estimate <span class="math inline">\(p_1\)</span>. The
+EVSI can be computed to show the expected value of surveying <span class="math inline">\(n\)</span> individuals, for different sample sizes
+<span class="math inline">\(n\)</span>.</p>
+<p>This is achieved using the function <code>evsivar</code> in the
+<code>voi</code> package, as follows.</p>
+<ul>
+<li><p>As in <code>evppivar</code>, samples from the prior distributions
+of the parameters are supplied in the data frame
+<code>inputs</code>.</p></li>
+<li><p><code>study=&quot;binary&quot;</code> indicates that the proposed study
+consists of a binary outcome observed from <code>n</code>
+individuals.<br />
+</p></li>
+<li><p><code>pars=&quot;p1&quot;</code> indicates which input parameter is
+informed by the study, in other words, which parameter is assumed to
+generate the study data.</p></li>
+</ul>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evsivar</span>(p2, inputs, <span class="at">study =</span> <span class="st">&quot;binary&quot;</span>, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>,<span class="dv">10000</span>))</span></code></pre></div>
+<pre><code>##       n         evsi
+## 1   100 0.0009216481
+## 2  1000 0.0016288014
+## 3 10000 0.0017851702</code></pre>
+<p>As the proposed sample sizes increase, the expected value of sample
+information informing <span class="math inline">\(p_1\)</span> converges
+to the EVPPI, the expected value of perfect information about <span class="math inline">\(p_1\)</span>.</p>
+<p>Alternatively, suppose we were able to collect information about the
+<em>unbiased</em> population, whose infection prevalence is <span class="math inline">\(p_2\)</span>. That is, suppose we surveyed <span class="math inline">\(n\)</span> individuals, each infected with
+probability <span class="math inline">\(p_2\)</span>. In this case, we
+can compute the EVSI by using <code>evsivar</code> with the model
+<code>inputs</code> defined to equal the model outputs, as follows:</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>inputs_p2 <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">p2 =</span> p2)</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">evsivar</span>(p2, <span class="at">inputs=</span>inputs_p2, <span class="at">study =</span> <span class="st">&quot;binary&quot;</span>, <span class="at">pars=</span><span class="st">&quot;p2&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">1000</span>, <span class="dv">10000</span>))</span></code></pre></div>
+<pre><code>##       n        evsi
+## 1   100 0.002718628
+## 2  1000 0.003343779
+## 3 10000 0.003427483</code></pre>
+<p>The unbiased data is clearly more valuable than the biased data, with
+double the variance reductions from biased data of the same sample size.
+As the sample size increases, the value converges to the EVPI, hence (in
+the asymptote) we will eliminate all uncertainty about our quantity of
+interest <span class="math inline">\(p_2\)</span>.</p>
+</div>
+</div>
+<div id="enbs" class="section level2">
+<h2>Expected net benefit of sampling</h2>
+<p>The <code>voi</code> package includes a function <code>enbs()</code>
+to calculate the expected net benefit of sampling for a simple proposed
+study, given estimates of EVSI, and some other information including
+study costs and the size of the decision population.</p>
+<p>This is described in a <a href="plots.html">separate vignette</a>,
+which also demonstrates how to plot the results of VoI analyses.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
