@@ -39,3 +39,22 @@ test_that("Errors in sample size are handled", {
     expect_error(evsi(chemo_nb, chemo_pars, study="binary", pars="p_side_effects_t1", n=c(10, 100, -1)),
                  "should all be positive integers")
 })
+
+test_that("Do we need to specify pars for EVSI",{
+  ## pars_datagen is required
+  expect_error(evsi(chemo_nb, chemo_pars, study="binary", pars_datagen = "p_wrong"), "not found in columns of `inputs`") 
+  ## pars_datagen is set to pars
+  expect_error(evsi(chemo_nb, chemo_pars, study="binary", pars = "p_wrong"), "not found in columns of `inputs`") 
+  ## pars is not required, and is ignored
+  expect_error(evsi(chemo_nb, chemo_pars, study="binary", pars_datagen = "p_side_effects_t2", pars = "p_wrong"), NA) 
+  ## pars is required
+  expect_error(evsi(chemo_nb, chemo_pars, study="binary", method="mm", pars = "p_wrong"), "not found in columns of `inputs`") 
+  expect_error(evsi(chemo_nb, chemo_pars, study="binary", method="is", pars = "p_wrong"), "not found in columns of `inputs`") 
+})
+
+test_that("Input parameter validation for built in EVSI",{
+  pars_wrong <- chemo_pars
+  pars_wrong$p_side_effects_t1[1] <- -1
+  expect_error(evsi(chemo_nb, pars_wrong, study="binary", pars="p_side_effects_t1"),
+                 "less than 0")
+})

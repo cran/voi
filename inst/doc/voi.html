@@ -12,7 +12,7 @@
 
 <meta name="author" content="Christopher Jackson" />
 
-<meta name="date" content="2023-05-26" />
+<meta name="date" content="2023-11-22" />
 
 <title>voi for Value of Information calculation: package overview</title>
 
@@ -341,7 +341,7 @@ code > span.er { color: #a61717; background-color: #e3d2d2; }
 <h1 class="title toc-ignore">voi for Value of Information calculation:
 package overview</h1>
 <h4 class="author">Christopher Jackson</h4>
-<h4 class="date">2023-05-26</h4>
+<h4 class="date">2023-11-22</h4>
 
 
 <div id="TOC">
@@ -445,10 +445,10 @@ simple to generate, as follows.</p>
 <h3>Specifying model inputs</h3>
 <p>The inputs should be a data frame with one column per parameter and
 one row per random sample.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>nsam <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>inputs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">p1 =</span> <span class="fu">rnorm</span>(nsam, <span class="dv">1</span>, <span class="dv">1</span>), </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">p2 =</span> <span class="fu">rnorm</span>(nsam, <span class="dv">0</span>, <span class="dv">2</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>) </span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>nsam <span class="ot">&lt;-</span> <span class="dv">10000</span></span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a>inputs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">p1 =</span> <span class="fu">rnorm</span>(nsam, <span class="dv">1</span>, <span class="dv">1</span>), </span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a>                     <span class="at">p2 =</span> <span class="fu">rnorm</span>(nsam, <span class="dv">0</span>, <span class="dv">2</span>))</span></code></pre></div>
 </div>
 <div id="specifying-model-outputs" class="section level3">
 <h3>Specifying model outputs</h3>
@@ -456,8 +456,8 @@ one row per random sample.</p>
 <p><strong>Net benefit</strong> form. A data frame with one column per
 treatment, and one row per random sample, giving the net benefit of each
 treatment. In this example, the net benefit of treatment 1 is zero.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>outputs_nb <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">t1 =</span> <span class="dv">0</span>, </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">t2 =</span> inputs<span class="sc">$</span>p1 <span class="sc">-</span> inputs<span class="sc">$</span>p2)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>outputs_nb <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">t1 =</span> <span class="dv">0</span>, </span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>                         <span class="at">t2 =</span> inputs<span class="sc">$</span>p1 <span class="sc">-</span> inputs<span class="sc">$</span>p2)</span></code></pre></div>
 <p><strong>Cost-effectiveness analysis</strong> form. This should be a
 list that includes the following three named elements (in any order)</p>
 <ul>
@@ -477,11 +477,11 @@ benefit <span class="math inline">\(y = p_1 - p_2\)</span> defined in
 <code>outputs_nb</code> corresponds to a willingness-to-pay of <span class="math inline">\(k=1\)</span>. The cost-effectiveness format allows
 us to compare VoI between different willingness-to-pay values, e.g. 1, 2
 and 3 say here.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>outputs_cea <span class="ot">&lt;-</span> <span class="fu">list</span>( </span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">e =</span> <span class="fu">data.frame</span>(<span class="at">t1 =</span> <span class="dv">0</span>, <span class="at">t2 =</span> inputs<span class="sc">$</span>p1), </span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">c =</span> <span class="fu">data.frame</span>(<span class="at">t1 =</span> <span class="dv">0</span>, <span class="at">t2 =</span> inputs<span class="sc">$</span>p2), </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">k =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>outputs_cea <span class="ot">&lt;-</span> <span class="fu">list</span>( </span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="at">e =</span> <span class="fu">data.frame</span>(<span class="at">t1 =</span> <span class="dv">0</span>, <span class="at">t2 =</span> inputs<span class="sc">$</span>p1), </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="at">c =</span> <span class="fu">data.frame</span>(<span class="at">t1 =</span> <span class="dv">0</span>, <span class="at">t2 =</span> inputs<span class="sc">$</span>p2), </span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="at">k =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>)</span></code></pre></div>
 <p>Note that objects returned by the <code>bcea</code> function in the
 <a href="https://CRAN.R-project.org/package=BCEA">BCEA</a> package
 satisfy this “cost-effectiveness analysis” format.</p>
@@ -511,11 +511,11 @@ sampled parameter values. The expected net benefit given perfect
 information is then computed as the average of this sample
 (<code>nb_perfect</code>).</p></li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>decision_current <span class="ot">&lt;-</span> <span class="dv">2</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>nb_current <span class="ot">&lt;-</span> <span class="dv">1</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>decision_perfect <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(outputs_nb<span class="sc">$</span>t2 <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>nb_perfect <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(decision_perfect <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">0</span>, outputs_nb<span class="sc">$</span>t2)</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>(evpi1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(nb_perfect) <span class="sc">-</span> nb_current)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>decision_current <span class="ot">&lt;-</span> <span class="dv">2</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>nb_current <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>decision_perfect <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(outputs_nb<span class="sc">$</span>t2 <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>nb_perfect <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(decision_perfect <span class="sc">==</span> <span class="dv">1</span>, <span class="dv">0</span>, outputs_nb<span class="sc">$</span>t2)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>(evpi1 <span class="ot">&lt;-</span> <span class="fu">mean</span>(nb_perfect) <span class="sc">-</span> nb_current)</span></code></pre></div>
 <pre><code>## [1] 0.4778316</code></pre>
 <p>In practice we would not usually know the exact expectation (under
 the current uncertainty distribution) of the net benefit for any
@@ -530,8 +530,8 @@ which is the net benefit of the better decision we should have made (if
 we had known the truth), minus the net benefit of the decision we did
 make. The opportunity loss can be computed at each sample as follows.
 The EVPI is the mean of the opportunity loss.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>opp_loss <span class="ot">&lt;-</span> nb_perfect <span class="sc">-</span> nb_current</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(opp_loss)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>opp_loss <span class="ot">&lt;-</span> nb_perfect <span class="sc">-</span> nb_current</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="fu">mean</span>(opp_loss)</span></code></pre></div>
 <pre><code>## [1] 0.4778316</code></pre>
 </div>
 <div id="using-the-voi-package-to-calculate-evpi" class="section level4">
@@ -540,10 +540,10 @@ The EVPI is the mean of the opportunity loss.</p>
 <code>evpi</code> to compute the EVPI using the above procedure. The
 function automatically detects whether your outputs are in net benefit
 or cost-effectiveness format.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(voi)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">evpi</span>(outputs_nb)</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">library</span>(voi)</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="fu">evpi</span>(outputs_nb)</span></code></pre></div>
 <pre><code>## [1] 0.4759885</code></pre>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evpi</span>(outputs_cea)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="fu">evpi</span>(outputs_cea)</span></code></pre></div>
 <pre><code>##   k      evpi
 ## 1 1 0.4759885
 ## 2 2 0.4028003
@@ -561,7 +561,7 @@ that the decision under perfect information agrees with the decision
 under current information, in this case, is the probability that the
 true value of a <span class="math inline">\(N(1, \sqrt{5})\)</span> is
 actually positive.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>prob_correct <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fu">sqrt</span>(<span class="dv">5</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>prob_correct <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">pnorm</span>(<span class="dv">0</span>, <span class="dv">1</span>, <span class="fu">sqrt</span>(<span class="dv">5</span>))</span></code></pre></div>
 <p>The mean of <code>nb_perfect</code> can then be calculated as the
 expected net benefit given a correct decision, multiplied by the
 probability of a correct decision. The former is the mean of the values
@@ -569,14 +569,14 @@ of <code>outputs_nb$t2</code> which are positive, which is the mean of a
 <span class="math inline">\(N(1,\sqrt{5})\)</span> truncated below at
 zero. The mean of the truncated normal distribution has a <a href="https://en.wikipedia.org/wiki/Truncated_normal_distribution">known
 analytic form</a>, represented in the following R function.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mean_truncnorm <span class="ot">&lt;-</span> <span class="cf">function</span>(mu, sig, <span class="at">lower=</span><span class="sc">-</span><span class="cn">Inf</span>, <span class="at">upper=</span><span class="cn">Inf</span>){ </span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  a <span class="ot">&lt;-</span> (lower<span class="sc">-</span>mu)<span class="sc">/</span>sig</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  b <span class="ot">&lt;-</span> (upper<span class="sc">-</span>mu)<span class="sc">/</span>sig</span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  mu <span class="sc">+</span> sig <span class="sc">*</span> (<span class="fu">dnorm</span>(a) <span class="sc">-</span> <span class="fu">dnorm</span>(b)) <span class="sc">/</span> (<span class="fu">pnorm</span>(b) <span class="sc">-</span> <span class="fu">pnorm</span>(a))</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>enb_correct <span class="ot">&lt;-</span> <span class="fu">mean_truncnorm</span>(<span class="dv">1</span>, <span class="fu">sqrt</span>(<span class="dv">5</span>), <span class="at">lower=</span><span class="dv">0</span>) </span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>mean_nb_perfect <span class="ot">&lt;-</span> enb_correct <span class="sc">*</span> prob_correct</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>(evpi_exact <span class="ot">&lt;-</span> mean_nb_perfect <span class="sc">-</span> nb_current)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>mean_truncnorm <span class="ot">&lt;-</span> <span class="cf">function</span>(mu, sig, <span class="at">lower=</span><span class="sc">-</span><span class="cn">Inf</span>, <span class="at">upper=</span><span class="cn">Inf</span>){ </span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>  a <span class="ot">&lt;-</span> (lower<span class="sc">-</span>mu)<span class="sc">/</span>sig</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a>  b <span class="ot">&lt;-</span> (upper<span class="sc">-</span>mu)<span class="sc">/</span>sig</span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>  mu <span class="sc">+</span> sig <span class="sc">*</span> (<span class="fu">dnorm</span>(a) <span class="sc">-</span> <span class="fu">dnorm</span>(b)) <span class="sc">/</span> (<span class="fu">pnorm</span>(b) <span class="sc">-</span> <span class="fu">pnorm</span>(a))</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>}</span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>enb_correct <span class="ot">&lt;-</span> <span class="fu">mean_truncnorm</span>(<span class="dv">1</span>, <span class="fu">sqrt</span>(<span class="dv">5</span>), <span class="at">lower=</span><span class="dv">0</span>) </span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>mean_nb_perfect <span class="ot">&lt;-</span> enb_correct <span class="sc">*</span> prob_correct</span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>(evpi_exact <span class="ot">&lt;-</span> mean_nb_perfect <span class="sc">-</span> nb_current)</span></code></pre></div>
 <pre><code>## [1] 0.4798107</code></pre>
 <p>This is the exact value of the EVPI in this example, which differs
 slightly from the estimate based on Monte Carlo simulation.
@@ -619,10 +619,10 @@ the function returns the expected value of perfect information on all of
 these parameters simultaneously (described as the “multiparameter” EVPPI
 by <a href="https://doi.org/10.1177/0272989X13505910">Strong et
 al.</a>).</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>)</span></code></pre></div>
 <pre><code>##   pars      evppi
 ## 1   p1 0.08210074</code></pre>
-<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>))</span></code></pre></div>
 <pre><code>##    pars     evppi
 ## 1 p1,p2 0.4759885</code></pre>
 <p><strong>(b) As a list</strong>. A separate EVPPI is computed for each
@@ -633,11 +633,11 @@ multiparameter EVPPI is the theoretically same as the EVPI if, as in
 this case, the vector includes all of the parameters in the model
 (though note the difference from EVPI estimates above due to the
 different computational method).</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">list</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">list</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>))</span></code></pre></div>
 <pre><code>##   pars      evppi
 ## 1   p1 0.08210074
 ## 2   p2 0.39029827</code></pre>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">list</span>(<span class="st">&quot;p1&quot;</span>,<span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">list</span>(<span class="st">&quot;p1&quot;</span>,<span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>)))</span></code></pre></div>
 <pre><code>##    pars      evppi
 ## 1    p1 0.08210074
 ## 2 p1,p2 0.47598851</code></pre>
@@ -645,7 +645,7 @@ different computational method).</p>
 indicating the parameter (or parameters), and the corresponding EVPPI.
 If the outputs are in cost-effectiveness analysis format, then a
 separate column is returned indicating the willingness-to-pay.</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_cea, inputs, <span class="at">pars=</span><span class="fu">list</span>(<span class="st">&quot;p1&quot;</span>,<span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>)))</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_cea, inputs, <span class="at">pars=</span><span class="fu">list</span>(<span class="st">&quot;p1&quot;</span>,<span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>)))</span></code></pre></div>
 <pre><code>##    pars k      evppi
 ## 1    p1 1 0.08210074
 ## 2    p1 2 0.17052564
@@ -667,7 +667,7 @@ al. (2013)</a>). The number of random samples to use in this computation
 can be changed using the <code>nsim</code> argument, which can be useful
 for this method as it can be prohibitive for large samples. Here the
 sample of 10000 is reduced to 1000.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;gp&quot;</span>, <span class="at">nsim=</span><span class="dv">1000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;gp&quot;</span>, <span class="at">nsim=</span><span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>##   pars      evppi
 ## 1   p1 0.08834038</code></pre>
 </div>
@@ -675,7 +675,7 @@ sample of 10000 is reduced to 1000.</p>
 <h4>Multivariate adaptive regression splines</h4>
 <p>This is a variant of generalized additive models based on linear
 splines, which uses a package called <a href="https://CRAN.R-project.org/package=earth">earth</a>.</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;earth&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;earth&quot;</span>)</span></code></pre></div>
 <pre><code>##   pars      evppi
 ## 1   p1 0.08810086</code></pre>
 <p>While the merits of this method for EVPPI computation have not been
@@ -688,8 +688,8 @@ accuracy and around 5 or fewer parameters.</p>
 <p>(from <a href="https://doi.org/10.1002/sim.6983">Heath et al.</a>, <a href="https://doi.org/10.1007/978-3-319-55718-2">Baio et al.</a> ). This
 needs the following extra packages to be installed, using the following
 commands.</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;INLA&#39;</span>, <span class="at">repos=</span><span class="st">&#39;https://inla.r-inla-download.org/R/stable&#39;</span>)</span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;splancs&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;INLA&#39;</span>, <span class="at">repos=</span><span class="st">&#39;https://inla.r-inla-download.org/R/stable&#39;</span>)</span>
+<span id="cb29-2"><a href="#cb29-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&#39;splancs&#39;</span>)</span></code></pre></div>
 <p>It is only applicable to calculating the multiparameter EVPPI for 2
 or more parameters.</p>
 <p>In this toy example it is overkill, since the two-parameter EVPPI is
@@ -698,7 +698,7 @@ simply the EVPI, and the default method needs an esoteric tweak
 <p>However it has been found to be more efficient than the Gaussian
 process method in many other situations. See <a href="https://doi.org/10.1002/sim.6983">Heath et al.</a>, <a href="https://doi.org/10.1007/978-3-319-55718-2">Baio et al.</a> for
 more details about implementing and tuning this method.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>), <span class="at">method=</span><span class="st">&quot;inla&quot;</span>, <span class="at">pfc_struc=</span><span class="st">&quot;iso&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>), <span class="at">method=</span><span class="st">&quot;inla&quot;</span>, <span class="at">pfc_struc=</span><span class="st">&quot;iso&quot;</span>)</span></code></pre></div>
 </div>
 <div id="bart" class="section level4">
 <h4>Bayesian additive regression trees (BART)</h4>
@@ -718,12 +718,12 @@ parameters is very close to the estimate of the EVPI, and the
 computation is quick (about 16 seconds on my laptop. Call as
 <code>evppi(...,verbose=TRUE)</code> to see the progress of the
 estimation).</p>
-<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(chemo_nb, chemo_pars, <span class="at">pars=</span><span class="fu">colnames</span>(chemo_pars), <span class="at">method=</span><span class="st">&quot;bart&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" tabindex="-1"></a><span class="fu">evppi</span>(chemo_nb, chemo_pars, <span class="at">pars=</span><span class="fu">colnames</span>(chemo_pars), <span class="at">method=</span><span class="st">&quot;bart&quot;</span>)</span></code></pre></div>
 <pre><code>##                                                                                                                                                                                        pars
 ## 1 p_side_effects_t1,p_side_effects_t2,c_home_care,c_hospital,c_death,u_recovery,u_home_care,u_hospital,logor_side_effects,p_hospitalised_total,p_died,lambda_home,lambda_hosp,rate_longterm
 ##      evppi
 ## 1 368.4953</code></pre>
-<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evpi</span>(chemo_nb)</span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" tabindex="-1"></a><span class="fu">evpi</span>(chemo_nb)</span></code></pre></div>
 <pre><code>## [1] 368.6051</code></pre>
 <p>The BART estimation is being performed using the <code>bart()</code>
 function from the <a href="https://CRAN.R-project.org/package=dbarts">dbarts</a> package, and
@@ -743,7 +743,7 @@ A challenge of estimating EVPPI using GAMs is to define a GAM that is
 sufficiently flexible to represent how the outputs depend on the inputs,
 but can also be estimated in practice, given the complexity of the GAM
 and the number of random samples available to fit it to.</p>
-<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>), <span class="at">method=</span><span class="st">&quot;gam&quot;</span>, <span class="at">gam_formula=</span><span class="st">&quot;s(p1) + s(p2)&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="fu">c</span>(<span class="st">&quot;p1&quot;</span>,<span class="st">&quot;p2&quot;</span>), <span class="at">method=</span><span class="st">&quot;gam&quot;</span>, <span class="at">gam_formula=</span><span class="st">&quot;s(p1) + s(p2)&quot;</span>)</span></code></pre></div>
 <pre><code>##    pars     evppi
 ## 1 p1,p2 0.4759885</code></pre>
 <p>Note that if there are spaces in the variable names in
@@ -757,7 +757,7 @@ approximation, can be obtained by calling <code>evppi</code> with
 <code>se=TRUE</code>. This uses <span class="math inline">\(B\)</span>
 samples from the distribution of the GAM parameters, thus the standard
 error can be estimated more accurately by increasing B.</p>
-<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">se=</span><span class="cn">TRUE</span>, <span class="at">B=</span><span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb37"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">se=</span><span class="cn">TRUE</span>, <span class="at">B=</span><span class="dv">100</span>)</span></code></pre></div>
 <pre><code>##   pars      evppi          se
 ## 1   p1 0.08210074 0.007093807</code></pre>
 </div>
@@ -770,12 +770,12 @@ to use the default GAM method, which requires less tuning than these
 methods.</p>
 <p>The method of <a href="https://doi.org/10.1177/0272989X12465123">Strong and
 Oakley</a>:</p>
-<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">n.blocks=</span><span class="dv">20</span>, <span class="at">method=</span><span class="st">&quot;so&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">n.blocks=</span><span class="dv">20</span>, <span class="at">method=</span><span class="st">&quot;so&quot;</span>)</span></code></pre></div>
 <pre><code>##   pars      evppi
 ## 1   p1 0.07997543</code></pre>
 <p>The method of <a href="https://doi.org/10.1016/j.jval.2012.10.018">Sadatsafavi et
 al.</a>:</p>
-<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;sal&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" tabindex="-1"></a><span class="fu">evppi</span>(outputs_nb, inputs, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;sal&quot;</span>)</span></code></pre></div>
 <pre><code>##   pars      evppi
 ## 1   p1 0.08151919</code></pre>
 </div>
@@ -797,19 +797,19 @@ parameter values. This must have one argument for each parameter. The
 return value can be in either a “net benefit” form or a “costs and
 effects” form. The “net benefit” form is a vector giving the net benefit
 for each decision option.</p>
-<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a>model_fn_nb <span class="ot">&lt;-</span> <span class="cf">function</span>(p1, p2){ </span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">0</span>, p1 <span class="sc">-</span> p2) </span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" tabindex="-1"></a>model_fn_nb <span class="ot">&lt;-</span> <span class="cf">function</span>(p1, p2){ </span>
+<span id="cb43-2"><a href="#cb43-2" tabindex="-1"></a>  <span class="fu">c</span>(<span class="dv">0</span>, p1 <span class="sc">-</span> p2) </span>
+<span id="cb43-3"><a href="#cb43-3" tabindex="-1"></a>}</span></code></pre></div>
 <p>The “costs and effects” form is a matrix with two rows, and one
 column for each decision option. The rows gives the effects and costs
 respectively for each decision option. If they have names
 <code>&quot;e&quot;</code> and <code>&quot;c&quot;</code> then these are assumed to identify
 the effects and costs. Otherwise the first row is assumed to contain the
 effects, and the second the costs.</p>
-<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>model_fn_cea <span class="ot">&lt;-</span> <span class="cf">function</span>(p1, p2){ </span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rbind</span>(<span class="at">e =</span> <span class="fu">c</span>(<span class="dv">0</span>, p1), </span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">c =</span> <span class="fu">c</span>(<span class="dv">0</span>, p2)) </span>
-<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" tabindex="-1"></a>model_fn_cea <span class="ot">&lt;-</span> <span class="cf">function</span>(p1, p2){ </span>
+<span id="cb44-2"><a href="#cb44-2" tabindex="-1"></a>  <span class="fu">rbind</span>(<span class="at">e =</span> <span class="fu">c</span>(<span class="dv">0</span>, p1), </span>
+<span id="cb44-3"><a href="#cb44-3" tabindex="-1"></a>        <span class="at">c =</span> <span class="fu">c</span>(<span class="dv">0</span>, p2)) </span>
+<span id="cb44-4"><a href="#cb44-4" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="parameter-simulation-function" class="section level4">
 <h4>Parameter simulation function</h4>
@@ -817,10 +817,10 @@ effects, and the second the costs.</p>
 uncertainty distribution of the model parameters. This returns a data
 frame with <span class="math inline">\(n\)</span> rows and one named
 column for each parameter.</p>
-<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>par_fn <span class="ot">&lt;-</span> <span class="cf">function</span>(n){</span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p1 =</span> <span class="fu">rnorm</span>(n, <span class="dv">1</span>, <span class="dv">1</span>),</span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">p2 =</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">2</span>))</span>
-<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" tabindex="-1"></a>par_fn <span class="ot">&lt;-</span> <span class="cf">function</span>(n){</span>
+<span id="cb45-2"><a href="#cb45-2" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p1 =</span> <span class="fu">rnorm</span>(n, <span class="dv">1</span>, <span class="dv">1</span>),</span>
+<span id="cb45-3"><a href="#cb45-3" tabindex="-1"></a>             <span class="at">p2 =</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">2</span>))</span>
+<span id="cb45-4"><a href="#cb45-4" tabindex="-1"></a>}</span></code></pre></div>
 </div>
 <div id="invoking-evppi_mc" class="section level4">
 <h4>Invoking <code>evppi_mc</code></h4>
@@ -830,7 +830,7 @@ inner and outer loops. 1000 inner samples and 100 outer samples give a
 reasonable EVPPI estimate in this example, but many more samples may be
 required for the result to converge to the EVPPI in more complex
 models.</p>
-<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi_mc</span>(model_fn_nb, par_fn, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">ninner=</span><span class="dv">1000</span>, <span class="at">nouter=</span><span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" tabindex="-1"></a><span class="fu">evppi_mc</span>(model_fn_nb, par_fn, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">ninner=</span><span class="dv">1000</span>, <span class="at">nouter=</span><span class="dv">100</span>)</span></code></pre></div>
 </div>
 <div id="accounting-for-parameter-correlation" class="section level4">
 <h4>Accounting for parameter correlation</h4>
@@ -851,12 +851,12 @@ followed by <code>p2|p1</code>.</p>
 <code>evppi_mc</code> if the parameters are correlated. This allows
 <code>evppi_mc</code> to draw from the appropriate distribution in the
 inner loop.</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>par_fn_corr <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">p1=</span><span class="cn">NULL</span>){</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>  p1_new <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.null</span>(p1)) <span class="fu">rnorm</span>(n, <span class="dv">1</span>, <span class="dv">1</span>) <span class="cf">else</span> p1</span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p1 =</span> p1_new,</span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">p2 =</span> <span class="fu">rnorm</span>(n, p1_new, <span class="dv">2</span>))</span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="fu">evppi_mc</span>(model_fn_nb, par_fn_corr, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">ninner=</span><span class="dv">1000</span>, <span class="at">nouter=</span><span class="dv">100</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1" tabindex="-1"></a>par_fn_corr <span class="ot">&lt;-</span> <span class="cf">function</span>(n, <span class="at">p1=</span><span class="cn">NULL</span>){</span>
+<span id="cb47-2"><a href="#cb47-2" tabindex="-1"></a>  p1_new <span class="ot">&lt;-</span> <span class="cf">if</span> (<span class="fu">is.null</span>(p1)) <span class="fu">rnorm</span>(n, <span class="dv">1</span>, <span class="dv">1</span>) <span class="cf">else</span> p1</span>
+<span id="cb47-3"><a href="#cb47-3" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">p1 =</span> p1_new,</span>
+<span id="cb47-4"><a href="#cb47-4" tabindex="-1"></a>             <span class="at">p2 =</span> <span class="fu">rnorm</span>(n, p1_new, <span class="dv">2</span>))</span>
+<span id="cb47-5"><a href="#cb47-5" tabindex="-1"></a>}</span>
+<span id="cb47-6"><a href="#cb47-6" tabindex="-1"></a><span class="fu">evppi_mc</span>(model_fn_nb, par_fn_corr, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">ninner=</span><span class="dv">1000</span>, <span class="at">nouter=</span><span class="dv">100</span>)</span></code></pre></div>
 </div>
 </div>
 </div>
@@ -923,14 +923,14 @@ descriptive).</p>
 <p>The <code>evsi</code> function can then be used to compute the EVSI
 for a series of different sample sizes from this design. Note how the
 EVSI converges to the EVPPI as the sample size increases.</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>datagen_normal <span class="ot">&lt;-</span> <span class="cf">function</span>(inputs, <span class="at">n=</span><span class="dv">100</span>, <span class="at">sd=</span><span class="dv">1</span>){</span>
-<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">xbar =</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(inputs),</span>
-<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                          <span class="at">mean =</span> inputs[,<span class="st">&quot;p1&quot;</span>],</span>
-<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                          <span class="at">sd =</span> sd <span class="sc">/</span> <span class="fu">sqrt</span>(n)))</span>
-<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
-<span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">datagen_fn =</span> datagen_normal, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">100</span>,<span class="dv">1000</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" tabindex="-1"></a>datagen_normal <span class="ot">&lt;-</span> <span class="cf">function</span>(inputs, <span class="at">n=</span><span class="dv">100</span>, <span class="at">sd=</span><span class="dv">1</span>){</span>
+<span id="cb48-2"><a href="#cb48-2" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">xbar =</span> <span class="fu">rnorm</span>(<span class="fu">nrow</span>(inputs),</span>
+<span id="cb48-3"><a href="#cb48-3" tabindex="-1"></a>                          <span class="at">mean =</span> inputs[,<span class="st">&quot;p1&quot;</span>],</span>
+<span id="cb48-4"><a href="#cb48-4" tabindex="-1"></a>                          <span class="at">sd =</span> sd <span class="sc">/</span> <span class="fu">sqrt</span>(n)))</span>
+<span id="cb48-5"><a href="#cb48-5" tabindex="-1"></a>}</span>
+<span id="cb48-6"><a href="#cb48-6" tabindex="-1"></a></span>
+<span id="cb48-7"><a href="#cb48-7" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">1</span>)</span>
+<span id="cb48-8"><a href="#cb48-8" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">datagen_fn =</span> datagen_normal, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">10</span>,<span class="dv">100</span>,<span class="dv">1000</span>))</span></code></pre></div>
 <pre><code>##      n       evsi
 ## 1   10 0.07440250
 ## 2  100 0.08106261
@@ -944,11 +944,11 @@ EVSI converges to the EVPPI as the sample size increases.</p>
 supply the name of the design (in this case <code>&quot;normal_known&quot;</code>)
 and the name of the parameter or parameters (corresponding to a column
 of “inputs”) which is estimated by the study data.</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>), <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>), <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>)</span></code></pre></div>
 <pre><code>##      n       evsi
 ## 1  100 0.07998166
 ## 2 1000 0.08197188</code></pre>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_cea, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>), <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" tabindex="-1"></a><span class="fu">evsi</span>(outputs_cea, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>), <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>)</span></code></pre></div>
 <pre><code>##      n k       evsi
 ## 1  100 1 0.07976014
 ## 2  100 2 0.16666306
@@ -1000,20 +1000,20 @@ regression method, so it may be worth setting <code>nsim</code> to a
 value lower than the number of samples in <code>inputs</code>. Below
 <code>nsim=1000</code> is used so that only 1000 samples are used,
 instead of the full 10000 samples contained in <code>inputs</code>.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a>likelihood_normal <span class="ot">&lt;-</span> <span class="cf">function</span>(Y, inputs, <span class="at">n=</span><span class="dv">100</span>, <span class="at">sig=</span><span class="dv">1</span>){</span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> inputs[,<span class="st">&quot;p1&quot;</span>]</span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dnorm</span>(Y[,<span class="st">&quot;xbar&quot;</span>], mu, sig<span class="sc">/</span><span class="fu">sqrt</span>(n))</span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">datagen_fn =</span> datagen_normal, <span class="at">likelihood =</span> likelihood_normal, </span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">n=</span><span class="dv">100</span>, <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;is&quot;</span>, <span class="at">nsim=</span><span class="dv">1000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" tabindex="-1"></a>likelihood_normal <span class="ot">&lt;-</span> <span class="cf">function</span>(Y, inputs, <span class="at">n=</span><span class="dv">100</span>, <span class="at">sig=</span><span class="dv">1</span>){</span>
+<span id="cb54-2"><a href="#cb54-2" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> inputs[,<span class="st">&quot;p1&quot;</span>]</span>
+<span id="cb54-3"><a href="#cb54-3" tabindex="-1"></a>  <span class="fu">dnorm</span>(Y[,<span class="st">&quot;xbar&quot;</span>], mu, sig<span class="sc">/</span><span class="fu">sqrt</span>(n))</span>
+<span id="cb54-4"><a href="#cb54-4" tabindex="-1"></a>}</span>
+<span id="cb54-5"><a href="#cb54-5" tabindex="-1"></a></span>
+<span id="cb54-6"><a href="#cb54-6" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">datagen_fn =</span> datagen_normal, <span class="at">likelihood =</span> likelihood_normal, </span>
+<span id="cb54-7"><a href="#cb54-7" tabindex="-1"></a>     <span class="at">n=</span><span class="dv">100</span>, <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;is&quot;</span>, <span class="at">nsim=</span><span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>##     n      evsi
 ## 1 100 0.0864487</code></pre>
 <p>Again, this study model is available as a built-in study design, so
 instead of writing a user-defined likelihood and data generation
 function, <code>evsi</code> can also be invoked with
 <code>study=&quot;normal_known&quot;, method=&quot;is&quot;</code>.</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="dv">100</span>, <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;is&quot;</span>, <span class="at">nsim=</span><span class="dv">1000</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="#cb56-1" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="dv">100</span>, <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;is&quot;</span>, <span class="at">nsim=</span><span class="dv">1000</span>)</span></code></pre></div>
 <pre><code>##     n       evsi
 ## 1 100 0.08619358</code></pre>
 </div>
@@ -1098,9 +1098,9 @@ and is built in to the package, so we do not need to supply
 constants required by the conjugate normal analysis are the prior mean
 and SD of the parameter <code>p1</code>, and the sampling SD of an
 individual-level observation in the study, here <span class="math inline">\(\sigma=1\)</span>.</p>
-<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="dv">10000</span>, <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;mm&quot;</span>, <span class="at">Q=</span><span class="dv">30</span>,</span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>     <span class="at">model_fn =</span> model_fn_nb, <span class="at">par_fn =</span> par_fn,</span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>     <span class="at">analysis_args =</span> <span class="fu">list</span>(<span class="at">prior_mean=</span><span class="dv">1</span>, <span class="at">prior_sd=</span><span class="dv">1</span>, <span class="at">sampling_sd=</span><span class="dv">1</span>, <span class="at">niter=</span><span class="dv">1000</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1" tabindex="-1"></a><span class="fu">evsi</span>(outputs_nb, inputs, <span class="at">study =</span> <span class="st">&quot;normal_known&quot;</span>, <span class="at">n=</span><span class="dv">10000</span>, <span class="at">pars =</span> <span class="st">&quot;p1&quot;</span>, <span class="at">method=</span><span class="st">&quot;mm&quot;</span>, <span class="at">Q=</span><span class="dv">30</span>,</span>
+<span id="cb58-2"><a href="#cb58-2" tabindex="-1"></a>     <span class="at">model_fn =</span> model_fn_nb, <span class="at">par_fn =</span> par_fn,</span>
+<span id="cb58-3"><a href="#cb58-3" tabindex="-1"></a>     <span class="at">analysis_args =</span> <span class="fu">list</span>(<span class="at">prior_mean=</span><span class="dv">1</span>, <span class="at">prior_sd=</span><span class="dv">1</span>, <span class="at">sampling_sd=</span><span class="dv">1</span>, <span class="at">niter=</span><span class="dv">1000</span>))</span></code></pre></div>
 <pre><code>##       n       evsi
 ## 1 10000 0.05094176</code></pre>
 <p>The estimate of the EVSI is fairly close to the result from the
@@ -1152,29 +1152,29 @@ sampling. It is not necessary to use JAGS however - the analysis
 function may call any Bayesian modelling software.</p>
 <p>The following R function encapsulates how the posterior is obtained
 from the data in this analysis.</p>
-<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>analysis_fn <span class="ot">&lt;-</span> <span class="cf">function</span>(data, args, pars){</span>
-<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">y=</span><span class="fu">c</span>(data[,<span class="st">&quot;y1&quot;</span>], data[,<span class="st">&quot;y2&quot;</span>]))</span>
-<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a>  design <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="fu">rep</span>(args<span class="sc">$</span>n, <span class="dv">2</span>))</span>
-<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a>  priors <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a1=</span><span class="dv">53</span>, <span class="at">b1=</span><span class="dv">60</span>, <span class="at">mu=</span><span class="fu">log</span>(<span class="fl">0.54</span>), <span class="at">sigma=</span><span class="fl">0.3</span>)</span>
-<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a>  jagsdat <span class="ot">&lt;-</span> <span class="fu">c</span>(dat, design, priors)</span>
-<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a>  or_jagsmod <span class="ot">&lt;-</span> <span class="st">&quot;</span></span>
-<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="st">  model {</span></span>
-<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a><span class="st">    y[1] ~ dbinom(p[1], n[1])</span></span>
-<span id="cb60-9"><a href="#cb60-9" aria-hidden="true" tabindex="-1"></a><span class="st">    y[2] ~ dbinom(p[2], n[2])</span></span>
-<span id="cb60-10"><a href="#cb60-10" aria-hidden="true" tabindex="-1"></a><span class="st">    p[1] &lt;- p1</span></span>
-<span id="cb60-11"><a href="#cb60-11" aria-hidden="true" tabindex="-1"></a><span class="st">    p[2] &lt;- odds[2] / (1 + odds[2])</span></span>
-<span id="cb60-12"><a href="#cb60-12" aria-hidden="true" tabindex="-1"></a><span class="st">    p1 ~ dbeta(a1, b1)</span></span>
-<span id="cb60-13"><a href="#cb60-13" aria-hidden="true" tabindex="-1"></a><span class="st">    odds[1] &lt;- p[1] / (1 - p[1])</span></span>
-<span id="cb60-14"><a href="#cb60-14" aria-hidden="true" tabindex="-1"></a><span class="st">    odds[2] &lt;- odds[1] * exp(logor)</span></span>
-<span id="cb60-15"><a href="#cb60-15" aria-hidden="true" tabindex="-1"></a><span class="st">    logor ~ dnorm(mu, 1/sigma^2)</span></span>
-<span id="cb60-16"><a href="#cb60-16" aria-hidden="true" tabindex="-1"></a><span class="st">  }</span></span>
-<span id="cb60-17"><a href="#cb60-17" aria-hidden="true" tabindex="-1"></a><span class="st">  &quot;</span></span>
-<span id="cb60-18"><a href="#cb60-18" aria-hidden="true" tabindex="-1"></a>  or.jag <span class="ot">&lt;-</span> rjags<span class="sc">::</span><span class="fu">jags.model</span>(<span class="fu">textConnection</span>(or_jagsmod), </span>
-<span id="cb60-19"><a href="#cb60-19" aria-hidden="true" tabindex="-1"></a>                              <span class="at">data=</span>jagsdat, <span class="at">inits=</span><span class="fu">list</span>(<span class="at">logor=</span><span class="dv">0</span>, <span class="at">p1=</span><span class="fl">0.5</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb60-20"><a href="#cb60-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">update</span>(or.jag, <span class="dv">100</span>, <span class="at">progress.bar=</span><span class="st">&quot;none&quot;</span>)</span>
-<span id="cb60-21"><a href="#cb60-21" aria-hidden="true" tabindex="-1"></a>  sam <span class="ot">&lt;-</span> rjags<span class="sc">::</span><span class="fu">coda.samples</span>(or.jag, <span class="fu">c</span>(<span class="st">&quot;logor&quot;</span>), <span class="dv">500</span>, <span class="at">progress.bar=</span><span class="st">&quot;none&quot;</span>)</span>
-<span id="cb60-22"><a href="#cb60-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">logor_side_effects =</span> <span class="fu">as.numeric</span>(sam[[<span class="dv">1</span>]][,<span class="st">&quot;logor&quot;</span>]))</span>
-<span id="cb60-23"><a href="#cb60-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1" tabindex="-1"></a>analysis_fn <span class="ot">&lt;-</span> <span class="cf">function</span>(data, args, pars){</span>
+<span id="cb60-2"><a href="#cb60-2" tabindex="-1"></a>  dat <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">y=</span><span class="fu">c</span>(data[,<span class="st">&quot;y1&quot;</span>], data[,<span class="st">&quot;y2&quot;</span>]))</span>
+<span id="cb60-3"><a href="#cb60-3" tabindex="-1"></a>  design <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">n =</span> <span class="fu">rep</span>(args<span class="sc">$</span>n, <span class="dv">2</span>))</span>
+<span id="cb60-4"><a href="#cb60-4" tabindex="-1"></a>  priors <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">a1=</span><span class="dv">53</span>, <span class="at">b1=</span><span class="dv">60</span>, <span class="at">mu=</span><span class="fu">log</span>(<span class="fl">0.54</span>), <span class="at">sigma=</span><span class="fl">0.3</span>)</span>
+<span id="cb60-5"><a href="#cb60-5" tabindex="-1"></a>  jagsdat <span class="ot">&lt;-</span> <span class="fu">c</span>(dat, design, priors)</span>
+<span id="cb60-6"><a href="#cb60-6" tabindex="-1"></a>  or_jagsmod <span class="ot">&lt;-</span> <span class="st">&quot;</span></span>
+<span id="cb60-7"><a href="#cb60-7" tabindex="-1"></a><span class="st">  model {</span></span>
+<span id="cb60-8"><a href="#cb60-8" tabindex="-1"></a><span class="st">    y[1] ~ dbinom(p[1], n[1])</span></span>
+<span id="cb60-9"><a href="#cb60-9" tabindex="-1"></a><span class="st">    y[2] ~ dbinom(p[2], n[2])</span></span>
+<span id="cb60-10"><a href="#cb60-10" tabindex="-1"></a><span class="st">    p[1] &lt;- p1</span></span>
+<span id="cb60-11"><a href="#cb60-11" tabindex="-1"></a><span class="st">    p[2] &lt;- odds[2] / (1 + odds[2])</span></span>
+<span id="cb60-12"><a href="#cb60-12" tabindex="-1"></a><span class="st">    p1 ~ dbeta(a1, b1)</span></span>
+<span id="cb60-13"><a href="#cb60-13" tabindex="-1"></a><span class="st">    odds[1] &lt;- p[1] / (1 - p[1])</span></span>
+<span id="cb60-14"><a href="#cb60-14" tabindex="-1"></a><span class="st">    odds[2] &lt;- odds[1] * exp(logor)</span></span>
+<span id="cb60-15"><a href="#cb60-15" tabindex="-1"></a><span class="st">    logor ~ dnorm(mu, 1/sigma^2)</span></span>
+<span id="cb60-16"><a href="#cb60-16" tabindex="-1"></a><span class="st">  }</span></span>
+<span id="cb60-17"><a href="#cb60-17" tabindex="-1"></a><span class="st">  &quot;</span></span>
+<span id="cb60-18"><a href="#cb60-18" tabindex="-1"></a>  or.jag <span class="ot">&lt;-</span> rjags<span class="sc">::</span><span class="fu">jags.model</span>(<span class="fu">textConnection</span>(or_jagsmod), </span>
+<span id="cb60-19"><a href="#cb60-19" tabindex="-1"></a>                              <span class="at">data=</span>jagsdat, <span class="at">inits=</span><span class="fu">list</span>(<span class="at">logor=</span><span class="dv">0</span>, <span class="at">p1=</span><span class="fl">0.5</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb60-20"><a href="#cb60-20" tabindex="-1"></a>  <span class="fu">update</span>(or.jag, <span class="dv">100</span>, <span class="at">progress.bar=</span><span class="st">&quot;none&quot;</span>)</span>
+<span id="cb60-21"><a href="#cb60-21" tabindex="-1"></a>  sam <span class="ot">&lt;-</span> rjags<span class="sc">::</span><span class="fu">coda.samples</span>(or.jag, <span class="fu">c</span>(<span class="st">&quot;logor&quot;</span>), <span class="dv">500</span>, <span class="at">progress.bar=</span><span class="st">&quot;none&quot;</span>)</span>
+<span id="cb60-22"><a href="#cb60-22" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">logor_side_effects =</span> <span class="fu">as.numeric</span>(sam[[<span class="dv">1</span>]][,<span class="st">&quot;logor&quot;</span>]))</span>
+<span id="cb60-23"><a href="#cb60-23" tabindex="-1"></a>}</span></code></pre></div>
 <p>A full understanding of JAGS model specification and sampling syntax
 is beyond the scope of this vignette - we just explain what the
 <code>voi</code> package is expecting. The inputs and outputs of
@@ -1233,25 +1233,25 @@ the data. An additional argument <code>n</code> defines the sample size
 of the study. Note in this example how <code>inputs</code> is
 parameterised in terms of a baseline risk and a log odds ratio, and we
 combine these to obtain the absolute risk in group 2.</p>
-<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a>datagen_fn <span class="ot">&lt;-</span> <span class="cf">function</span>(inputs, <span class="at">n=</span><span class="dv">100</span>){</span>
-<span id="cb61-2"><a href="#cb61-2" aria-hidden="true" tabindex="-1"></a>  p1 <span class="ot">&lt;-</span> inputs[,<span class="st">&quot;p_side_effects_t1&quot;</span>]</span>
-<span id="cb61-3"><a href="#cb61-3" aria-hidden="true" tabindex="-1"></a>  logor <span class="ot">&lt;-</span> inputs[,<span class="st">&quot;logor_side_effects&quot;</span>]</span>
-<span id="cb61-4"><a href="#cb61-4" aria-hidden="true" tabindex="-1"></a>  odds1 <span class="ot">&lt;-</span> p1 <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> p1)</span>
-<span id="cb61-5"><a href="#cb61-5" aria-hidden="true" tabindex="-1"></a>  odds2 <span class="ot">&lt;-</span> odds1 <span class="sc">*</span> <span class="fu">exp</span>(logor)</span>
-<span id="cb61-6"><a href="#cb61-6" aria-hidden="true" tabindex="-1"></a>  p2 <span class="ot">&lt;-</span> odds2 <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> odds2)</span>
-<span id="cb61-7"><a href="#cb61-7" aria-hidden="true" tabindex="-1"></a>  nsim <span class="ot">&lt;-</span> <span class="fu">nrow</span>(inputs)</span>
-<span id="cb61-8"><a href="#cb61-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">y1 =</span> <span class="fu">rbinom</span>(nsim, n, p1),</span>
-<span id="cb61-9"><a href="#cb61-9" aria-hidden="true" tabindex="-1"></a>             <span class="at">y2 =</span> <span class="fu">rbinom</span>(nsim, n, p2))</span>
-<span id="cb61-10"><a href="#cb61-10" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" tabindex="-1"></a>datagen_fn <span class="ot">&lt;-</span> <span class="cf">function</span>(inputs, <span class="at">n=</span><span class="dv">100</span>){</span>
+<span id="cb61-2"><a href="#cb61-2" tabindex="-1"></a>  p1 <span class="ot">&lt;-</span> inputs[,<span class="st">&quot;p_side_effects_t1&quot;</span>]</span>
+<span id="cb61-3"><a href="#cb61-3" tabindex="-1"></a>  logor <span class="ot">&lt;-</span> inputs[,<span class="st">&quot;logor_side_effects&quot;</span>]</span>
+<span id="cb61-4"><a href="#cb61-4" tabindex="-1"></a>  odds1 <span class="ot">&lt;-</span> p1 <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">-</span> p1)</span>
+<span id="cb61-5"><a href="#cb61-5" tabindex="-1"></a>  odds2 <span class="ot">&lt;-</span> odds1 <span class="sc">*</span> <span class="fu">exp</span>(logor)</span>
+<span id="cb61-6"><a href="#cb61-6" tabindex="-1"></a>  p2 <span class="ot">&lt;-</span> odds2 <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> odds2)</span>
+<span id="cb61-7"><a href="#cb61-7" tabindex="-1"></a>  nsim <span class="ot">&lt;-</span> <span class="fu">nrow</span>(inputs)</span>
+<span id="cb61-8"><a href="#cb61-8" tabindex="-1"></a>  <span class="fu">data.frame</span>(<span class="at">y1 =</span> <span class="fu">rbinom</span>(nsim, n, p1),</span>
+<span id="cb61-9"><a href="#cb61-9" tabindex="-1"></a>             <span class="at">y2 =</span> <span class="fu">rbinom</span>(nsim, n, p2))</span>
+<span id="cb61-10"><a href="#cb61-10" tabindex="-1"></a>}</span></code></pre></div>
 <p>Finally <code>evsi</code> is called to perform the EVSI calculation
 using the moment matching method.</p>
-<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a>ev <span class="ot">&lt;-</span> <span class="fu">evsi</span>(<span class="at">outputs=</span>chemo_nb, <span class="at">inputs=</span>chemo_pars, </span>
-<span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">method=</span><span class="st">&quot;mm&quot;</span>,</span>
-<span id="cb62-3"><a href="#cb62-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">pars=</span><span class="st">&quot;logor_side_effects&quot;</span>, </span>
-<span id="cb62-4"><a href="#cb62-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">pars_datagen =</span> <span class="fu">c</span>(<span class="st">&quot;p_side_effects_t1&quot;</span>, <span class="st">&quot;logor_side_effects&quot;</span>), </span>
-<span id="cb62-5"><a href="#cb62-5" aria-hidden="true" tabindex="-1"></a>           <span class="at">datagen_fn =</span> datagen_fn, <span class="at">analysis_fn =</span> analysis_fn, </span>
-<span id="cb62-6"><a href="#cb62-6" aria-hidden="true" tabindex="-1"></a>           <span class="at">n =</span> <span class="dv">100</span>, <span class="at">Q =</span> <span class="dv">10</span>, </span>
-<span id="cb62-7"><a href="#cb62-7" aria-hidden="true" tabindex="-1"></a>           <span class="at">model_fn =</span> chemo_model_lor_nb, <span class="at">par_fn =</span> chemo_pars_fn)</span></code></pre></div>
+<div class="sourceCode" id="cb62"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" tabindex="-1"></a>ev <span class="ot">&lt;-</span> <span class="fu">evsi</span>(<span class="at">outputs=</span>chemo_nb, <span class="at">inputs=</span>chemo_pars, </span>
+<span id="cb62-2"><a href="#cb62-2" tabindex="-1"></a>           <span class="at">method=</span><span class="st">&quot;mm&quot;</span>,</span>
+<span id="cb62-3"><a href="#cb62-3" tabindex="-1"></a>           <span class="at">pars=</span><span class="st">&quot;logor_side_effects&quot;</span>, </span>
+<span id="cb62-4"><a href="#cb62-4" tabindex="-1"></a>           <span class="at">pars_datagen =</span> <span class="fu">c</span>(<span class="st">&quot;p_side_effects_t1&quot;</span>, <span class="st">&quot;logor_side_effects&quot;</span>), </span>
+<span id="cb62-5"><a href="#cb62-5" tabindex="-1"></a>           <span class="at">datagen_fn =</span> datagen_fn, <span class="at">analysis_fn =</span> analysis_fn, </span>
+<span id="cb62-6"><a href="#cb62-6" tabindex="-1"></a>           <span class="at">n =</span> <span class="dv">100</span>, <span class="at">Q =</span> <span class="dv">10</span>, </span>
+<span id="cb62-7"><a href="#cb62-7" tabindex="-1"></a>           <span class="at">model_fn =</span> chemo_model_lor_nb, <span class="at">par_fn =</span> chemo_pars_fn)</span></code></pre></div>
 <p>One aspect of the syntax of the <code>evsi</code> call is new for
 this example. <code>pars_datagen</code> identifies which parameters
 (columns of <code>inputs</code>) are required to generate data from the
@@ -1289,7 +1289,7 @@ uncertainty associated with this.</p>
 infected. Using a vague Beta(0,0) prior (flat on the logit scale), the
 posterior distribution of the survey infection rate <span class="math inline">\(p_1\)</span> is a Beta(5,95). We draw a random
 sample from this.</p>
-<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>, <span class="dv">5</span>, <span class="dv">95</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">rbeta</span>(<span class="dv">10000</span>, <span class="dv">5</span>, <span class="dv">95</span>)</span></code></pre></div>
 <p>Secondly, we guess that the true risk of being infected is twice the
 risk in the survey population, but we are uncertain about this relative
 risk. We might approximate our belief by placing a normal prior
@@ -1304,12 +1304,12 @@ the two parameters <span class="math inline">\(p_1\)</span> and <span class="mat
 distributions of the infection probability <span class="math inline">\(p_1\)</span> in the survey data (black) and the
 true infection probability <span class="math inline">\(p_2\)</span>
 (red).</p>
-<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="fl">0.8</span>, <span class="fl">0.4</span>)</span>
-<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plogis</span>(<span class="fu">qlogis</span>(p1) <span class="sc">+</span> beta)</span>
-<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(p1), <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">main=</span><span class="st">&quot;&quot;</span>)</span>
-<span id="cb64-4"><a href="#cb64-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">density</span>(p2), <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">lwd=</span><span class="dv">2</span>)</span>
-<span id="cb64-5"><a href="#cb64-5" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">col=</span><span class="fu">c</span>(<span class="st">&quot;black&quot;</span>,<span class="st">&quot;red&quot;</span>), <span class="at">lwd=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), </span>
-<span id="cb64-6"><a href="#cb64-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend=</span><span class="fu">c</span>(<span class="st">&quot;Surveyed infection probability&quot;</span>, <span class="st">&quot;True infection probability&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="#cb64-1" tabindex="-1"></a>beta <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="dv">10000</span>, <span class="fl">0.8</span>, <span class="fl">0.4</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">plogis</span>(<span class="fu">qlogis</span>(p1) <span class="sc">+</span> beta)</span>
+<span id="cb64-3"><a href="#cb64-3" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">density</span>(p1), <span class="at">lwd=</span><span class="dv">2</span>, <span class="at">xlim=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">1</span>), <span class="at">main=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb64-4"><a href="#cb64-4" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">density</span>(p2), <span class="at">col=</span><span class="st">&quot;red&quot;</span>, <span class="at">lwd=</span><span class="dv">2</span>)</span>
+<span id="cb64-5"><a href="#cb64-5" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">&quot;topright&quot;</span>, <span class="at">col=</span><span class="fu">c</span>(<span class="st">&quot;black&quot;</span>,<span class="st">&quot;red&quot;</span>), <span class="at">lwd=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>), </span>
+<span id="cb64-6"><a href="#cb64-6" tabindex="-1"></a>       <span class="at">legend=</span><span class="fu">c</span>(<span class="st">&quot;Surveyed infection probability&quot;</span>, <span class="st">&quot;True infection probability&quot;</span>))</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>The model <em>output</em> quantity is <span class="math inline">\(p_2\)</span>, and the model <em>inputs</em> are
 <span class="math inline">\(p_1\)</span> and <span class="math inline">\(\beta\)</span>. We now want to determine the
@@ -1323,7 +1323,7 @@ al. 2019</a>.</p>
 <p>The EVPI is trivially <span class="math inline">\(var(p_2)\)</span>,
 the variance under current information, which we can compute from the
 sample as</p>
-<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(p2)</span></code></pre></div>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" tabindex="-1"></a><span class="fu">var</span>(p2)</span></code></pre></div>
 <pre><code>## [1] 0.003436631</code></pre>
 <p>A more interesting quantity is the EVPPI for a parameter. It
 describes the expected reduction in variance given perfect knowledge of
@@ -1335,11 +1335,11 @@ E(var(p_2 | \beta))\]</span></p>
 <a href="https://doi.org/10.1080/01621459.2018.1562932">Jackson et
 al. 2019</a>. This is implemented in the function <code>evppivar</code>
 in the <code>voi</code> package.</p>
-<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>inputs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(p1, beta)</span>
-<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>(evppi_beta <span class="ot">&lt;-</span> <span class="fu">evppivar</span>(p2, inputs, <span class="at">par=</span><span class="st">&quot;beta&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" tabindex="-1"></a>inputs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(p1, beta)</span>
+<span id="cb67-2"><a href="#cb67-2" tabindex="-1"></a>(evppi_beta <span class="ot">&lt;-</span> <span class="fu">evppivar</span>(p2, inputs, <span class="at">par=</span><span class="st">&quot;beta&quot;</span>))</span></code></pre></div>
 <pre><code>##   pars       evppi
 ## 1 beta 0.001432078</code></pre>
-<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a>(evppi_p1 <span class="ot">&lt;-</span> <span class="fu">evppivar</span>(p2, inputs, <span class="at">par=</span><span class="st">&quot;p1&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" tabindex="-1"></a>(evppi_p1 <span class="ot">&lt;-</span> <span class="fu">evppivar</span>(p2, inputs, <span class="at">par=</span><span class="st">&quot;p1&quot;</span>))</span></code></pre></div>
 <pre><code>##   pars       evppi
 ## 1   p1 0.001800679</code></pre>
 <p>Hence a slightly greater improvement in variance is expected from
@@ -1354,11 +1354,11 @@ standard deviation of <span class="math inline">\(p_2\)</span> would be
 if we learnt <span class="math inline">\(p_1\)</span> (note that is not
 exactly the <em>expected</em> SD remaining, since we cannot swap the
 order of the square root and expectation operators).</p>
-<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">var</span>(p2)) <span class="co"># or sd(p2)</span></span></code></pre></div>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">var</span>(p2)) <span class="co"># or sd(p2)</span></span></code></pre></div>
 <pre><code>## [1] 0.05862279</code></pre>
-<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">var</span>(p2) <span class="sc">-</span> evppi_beta<span class="sc">$</span>evppi)</span></code></pre></div>
+<div class="sourceCode" id="cb73"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb73-1"><a href="#cb73-1" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">var</span>(p2) <span class="sc">-</span> evppi_beta<span class="sc">$</span>evppi)</span></code></pre></div>
 <pre><code>## [1] 0.04477224</code></pre>
-<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">var</span>(p2) <span class="sc">-</span> evppi_p1<span class="sc">$</span>evppi)</span></code></pre></div>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="#cb75-1" tabindex="-1"></a><span class="fu">sqrt</span>(<span class="fu">var</span>(p2) <span class="sc">-</span> evppi_p1<span class="sc">$</span>evppi)</span></code></pre></div>
 <pre><code>## [1] 0.04044691</code></pre>
 <p>Hence we would expect to reduce the SD of <span class="math inline">\(p_2\)</span> to around 2/3 of its original value
 by learning <span class="math inline">\(p_1\)</span> or <span class="math inline">\(\beta\)</span>.</p>
@@ -1375,18 +1375,18 @@ fits a regression model with <code>p2</code> as the outcome, and
 <code>p1</code> as the single predictor. A generalized additive model
 based on splines is fitted using the <code>gam</code> function from the
 <code>mgcv</code> package.</p>
-<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x=</span>p1, <span class="at">y=</span>p2, <span class="at">pch=</span><span class="st">&quot;.&quot;</span>)</span>
-<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> mgcv<span class="sc">::</span><span class="fu">gam</span>(p2 <span class="sc">~</span> <span class="fu">te</span>(p1, <span class="at">bs=</span><span class="st">&quot;cr&quot;</span>))</span>
-<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>p1fit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(mod)</span>
-<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">sort</span>(p1), p1fit[<span class="fu">order</span>(p1)], <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="#cb77-1" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x=</span>p1, <span class="at">y=</span>p2, <span class="at">pch=</span><span class="st">&quot;.&quot;</span>)</span>
+<span id="cb77-2"><a href="#cb77-2" tabindex="-1"></a>mod <span class="ot">&lt;-</span> mgcv<span class="sc">::</span><span class="fu">gam</span>(p2 <span class="sc">~</span> <span class="fu">te</span>(p1, <span class="at">bs=</span><span class="st">&quot;cr&quot;</span>))</span>
+<span id="cb77-3"><a href="#cb77-3" tabindex="-1"></a>p1fit <span class="ot">&lt;-</span> <span class="fu">fitted</span>(mod)</span>
+<span id="cb77-4"><a href="#cb77-4" tabindex="-1"></a><span class="fu">lines</span>(<span class="fu">sort</span>(p1), p1fit[<span class="fu">order</span>(p1)], <span class="at">col=</span><span class="st">&quot;blue&quot;</span>)</span></code></pre></div>
 <p><img src="data:image/png;base64,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" /><!-- --></p>
 <p>Taking the variance of the <em>residuals</em> from this regression
 (observed minus fitted values) produces an estimate of <span class="math inline">\(E(var(p_2 | p_1 = x))\)</span>, intuitively, the
 expected variance given knowledge of <span class="math inline">\(p_1\)</span>, which, when subtracted from the
 variance of <span class="math inline">\(p_2\)</span>, gives the
 EVPPI.</p>
-<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>p1res <span class="ot">&lt;-</span> p2 <span class="sc">-</span> p1fit</span>
-<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(p2) <span class="sc">-</span> <span class="fu">var</span>(p1res)</span></code></pre></div>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" tabindex="-1"></a>p1res <span class="ot">&lt;-</span> p2 <span class="sc">-</span> p1fit</span>
+<span id="cb78-2"><a href="#cb78-2" tabindex="-1"></a><span class="fu">var</span>(p2) <span class="sc">-</span> <span class="fu">var</span>(p1res)</span></code></pre></div>
 <pre><code>## [1] 0.001801982</code></pre>
 <p>This agrees (up to Monte Carlo error) with the value produced by
 <code>evppivar</code>, which is obtained by a closely-related method, as
@@ -1395,7 +1395,7 @@ the total variance minus the variance of the residuals, through the “law
 of total variance”:</p>
 <p><span class="math display">\[var(Y) - E_{X}\left[var_{Y| X}(Y
 |X)\right] = var_{X} \left[E_{Y|X}(Y|X)\right]\]</span></p>
-<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="fu">var</span>(p1fit)</span></code></pre></div>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" tabindex="-1"></a><span class="fu">var</span>(p1fit)</span></code></pre></div>
 <pre><code>## [1] 0.001800679</code></pre>
 </div>
 <div id="evsi-for-estimation" class="section level3">
@@ -1420,7 +1420,7 @@ individuals.<br />
 informed by the study, in other words, which parameter is assumed to
 generate the study data.</p></li>
 </ul>
-<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="fu">evsivar</span>(p2, inputs, <span class="at">study =</span> <span class="st">&quot;binary&quot;</span>, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>,<span class="dv">10000</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" tabindex="-1"></a><span class="fu">evsivar</span>(p2, inputs, <span class="at">study =</span> <span class="st">&quot;binary&quot;</span>, <span class="at">pars=</span><span class="st">&quot;p1&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>,<span class="dv">1000</span>,<span class="dv">10000</span>))</span></code></pre></div>
 <pre><code>##       n         evsi
 ## 1   100 0.0009216481
 ## 2  1000 0.0016288014
@@ -1433,8 +1433,8 @@ to the EVPPI, the expected value of perfect information about <span class="math 
 probability <span class="math inline">\(p_2\)</span>. In this case, we
 can compute the EVSI by using <code>evsivar</code> with the model
 <code>inputs</code> defined to equal the model outputs, as follows:</p>
-<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>inputs_p2 <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">p2 =</span> p2)</span>
-<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a><span class="fu">evsivar</span>(p2, <span class="at">inputs=</span>inputs_p2, <span class="at">study =</span> <span class="st">&quot;binary&quot;</span>, <span class="at">pars=</span><span class="st">&quot;p2&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">1000</span>, <span class="dv">10000</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" tabindex="-1"></a>inputs_p2 <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">p2 =</span> p2)</span>
+<span id="cb84-2"><a href="#cb84-2" tabindex="-1"></a><span class="fu">evsivar</span>(p2, <span class="at">inputs=</span>inputs_p2, <span class="at">study =</span> <span class="st">&quot;binary&quot;</span>, <span class="at">pars=</span><span class="st">&quot;p2&quot;</span>, <span class="at">n=</span><span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">1000</span>, <span class="dv">10000</span>))</span></code></pre></div>
 <pre><code>##       n        evsi
 ## 1   100 0.002718628
 ## 2  1000 0.003343779

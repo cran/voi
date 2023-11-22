@@ -183,7 +183,7 @@ datagen_fn <- function(inputs, n=100){
              y2 = rbinom(nsim, n, p2))
 }
 
-## ----cache=TRUE,message=FALSE-------------------------------------------------
+## ----cache=TRUE,message=FALSE,eval=requireNamespace("rjags")------------------
 ev <- evsi(outputs=chemo_nb, inputs=chemo_pars, 
            method="mm",
            pars="logor_side_effects", 
