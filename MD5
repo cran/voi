@@ -1,6 +1,6 @@
-118b47a7e26d63563c5005ef0f1abf0d *DESCRIPTION
+7fc4fa2e3feb91b80543d62e478ea7bd *DESCRIPTION
 4f37246e2711b4946e8b21abd4c200ce *NAMESPACE
-f89d94ad7933f6f5b546704ac9a9e1d1 *NEWS.md
+fd927803c2085c54fa83b9a1f952f128 *NEWS.md
 1f03b536dca53cbdb50c52e3d16bf587 *R/bf.R
 61d6a8e9be0f8ef21175e59fad1ecbfa *R/check_regression.R
 d7939b5cec1afda2b1763614edbed465 *R/data.R
@@ -100,10 +100,10 @@ e9958d9aff912bb2b1772da10a739baf *inst/book_misc/evppi_reg_files/figure-latex/do
 3ed53bdc3c884c78ce92e95511214718 *inst/book_misc/he_graphs.R
 6d47af32947ed3528a0e5c1070ff6ef9 *inst/doc/plots.R
 25454457f910c289004224a44931b735 *inst/doc/plots.Rmd
-b2fd46afae23b09bea05e31b95234762 *inst/doc/plots.html
+b88b610f1666a22faf489ed1aa6a4b2a *inst/doc/plots.html
 aa968c110430a7f7e81cb47b8a4185eb *inst/doc/voi.R
 769ace80ff6f5e0d5c214a715432eb70 *inst/doc/voi.Rmd
-cce0cf61ed20e17669026d73023e64f7 *inst/doc/voi.html
+df3387981393592a8cb99b522f049550 *inst/doc/voi.html
 b05a43bbe32b29e1b37cd427dc39d2b4 *man/all_interactions.Rd
 42668b8483e43a88e12137a4b002b5b7 *man/check_model_fn.Rd
 e3af88a716fbbb135043f7f12c33e101 *man/check_regression.Rd
@@ -146,7 +146,7 @@ ac234d15b26a4ebf34937e5b03800ce3 *tests/testthat/test_evsi_mm.R
 5056cc717697eefa175a78782d017e53 *tests/testthat/test_lincomb.R
 4853c15c56f1295d0f837fca7de53901 *tests/testthat/test_model_errors.R
 02f7e635bd9bbfd519a4fedb704de335 *tests/testthat/test_models.R
-480b5d26fdc2bdf2595f1384a7e4571b *tests/testthat/test_multcomp.R
+e8b6250747aae7bf7a2e91b0cb00a061 *tests/testthat/test_multcomp.R
 b0f65406bde08b5f5b8c97dd99c1bce9 *tests/testthat/test_plots.R
 0c3513175187c2b4b2c439bd620425ef *vignettes/book.html
 25454457f910c289004224a44931b735 *vignettes/plots.Rmd
