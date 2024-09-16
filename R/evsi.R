@@ -238,6 +238,8 @@
 ##'   \code{k} identifies the willingness-to-pay.
 ##'
 ##' @references
+##' 
+##' Heath, A., Kunst, N., & Jackson, C. (eds.). (2024). Value of Information for Healthcare Decision-Making. CRC Press.
 ##'
 ##' Strong, M., Oakley, J. E., Brennan, A., & Breeze, P. (2015). Estimating the
 ##' expected value of sample information using the probabilistic sensitivity
@@ -321,6 +323,7 @@ evsi <- function(outputs,
     }
     else stop("Other methods not implemented yet")
     attr(res, "method") <- method
+    attr(res, "outputs") <- class(outputs)[1]
     class(res) <- c("evsi", attr(res,"class"))
     res
 }
@@ -340,7 +343,7 @@ evsi_npreg <- function(outputs, inputs, datagen_fn, pars, n, method=NULL, se=FAL
     resall <- cbind(n=rep(n,each=nrow(res[[1]])), resall)
     if (check){
       attr(resall, "models") <- lapply(res, function(x)attr(x, "models"))
-      names(attr(resall,"models")) <- as.character(resall$n)
+      names(attr(resall,"models")) <- as.character(n)
     }
     resall
 }

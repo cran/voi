@@ -184,13 +184,13 @@ datagen_fn <- function(inputs, n=100){
 }
 
 ## ----cache=TRUE,message=FALSE,eval=requireNamespace("rjags")------------------
-ev <- evsi(outputs=chemo_nb, inputs=chemo_pars, 
-           method="mm",
-           pars="logor_side_effects", 
-           pars_datagen = c("p_side_effects_t1", "logor_side_effects"), 
-           datagen_fn = datagen_fn, analysis_fn = analysis_fn, 
-           n = 100, Q = 10, 
-           model_fn = chemo_model_lor_nb, par_fn = chemo_pars_fn)
+#  ev <- evsi(outputs=chemo_nb, inputs=chemo_pars,
+#             method="mm",
+#             pars="logor_side_effects",
+#             pars_datagen = c("p_side_effects_t1", "logor_side_effects"),
+#             datagen_fn = datagen_fn, analysis_fn = analysis_fn,
+#             n = 100, Q = 10,
+#             model_fn = chemo_model_lor_nb, par_fn = chemo_pars_fn)
 
 ## -----------------------------------------------------------------------------
 p1 <- rbeta(10000, 5, 95)

@@ -1,3 +1,12 @@
+# Version 1.0.3 (2024-09-16)
+
+* Citations to published book ([Heath et al](https://doi.org/10.1201/9781003156109)) added.
+
+* Fix for `check_regression` with `evsi()`.
+
+* CRAN maintenance changes.
+
+
 # Version 1.0.2
 
 * Fix for test of reference option
